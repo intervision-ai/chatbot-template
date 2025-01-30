@@ -1,0 +1,32 @@
+/* Custom CSS for the zoom in/out animation */
+@keyframes zoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.animate-zoom {
+  animation: zoom 2s infinite;
+}
+/* custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #999b9d; /* Dark gray thumb */
+  border-radius: 6px; /* Rounded corners for the thumb */
+  border: 3px solid transparent; /* Add space around the thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #5a5b5d; /* Slightly darker gray on hover */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #edf2f7; /* Light gray track */
+  border-radius: 6px; /* Rounded corners for the track */
+}

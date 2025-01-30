@@ -1,0 +1,39 @@
+{
+  "appName": "Brinkmann",
+  "apiUrls": {
+    "chatQuery": "https://oxbiuvy7ik3fphptge6odqbnne0issgg.lambda-url.us-west-2.on.aws/",
+    "getChatsBySession": "https://u3ukd5xp7ep7amjbal6uo3kdc40ehavl.lambda-url.us-west-2.on.aws/",
+    "getChatHistory": "https://yijlrumcg5kbulj6h7vknienkm0gvqrx.lambda-url.us-west-2.on.aws/8/5*/",
+    "saveFeedback": "https://3vzdnzzazvoqbp4gxv45akps5e0zqpco.lambda-url.us-west-2.on.aws/"
+  },
+
+  "branding": {
+    "theme": {
+      "primaryBgColor": "#3498db",
+      "primaryFgColor": "#3498db",
+      "secondaryBgColor": "#2ecc71",
+      "secondaryFgColor": "#2ecc71"
+    }
+  },
+  "oktaConfig": {
+    "issuer": "https://auth.hostedcafe.com/oauth2/default",
+    "clientId": "0oa1flvu3p3ayr02z358",
+    "redirectUri": "/login/callback"
+  },
+  "AppLevelConstants": {
+    "defaultQuestions": [
+      {
+        "id": 1,
+        "text": "What is the list of official company holidays, and how are they observed?"
+      },
+      {
+        "id": 2,
+        "text": "What are the working hours, and is there a flexible work policy?"
+      },
+      {
+        "id": 3,
+        "text": "What is the process for reporting workplace issues or grievances?"
+      }
+    ]
+  }
+}
