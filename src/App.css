@@ -1,6 +1,7 @@
 /* Custom CSS for the zoom in/out animation */
 @keyframes zoom {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -27,6 +28,6 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background-color: #edf2f7; /* Light gray track */
+  background-color: #a4a5a5; /* Light gray track */
   border-radius: 6px; /* Rounded corners for the track */
 }

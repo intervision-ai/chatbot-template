@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FileText, PaperclipIcon, X } from "lucide-react";
+import { FileText, PaperclipIcon } from "lucide-react";
 import {
   forwardRef,
   useCallback,
@@ -10,7 +10,6 @@ import {
 } from "react";
 import { useDropzone } from "react-dropzone";
 // import { useAuth } from "react-oidc-context";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 // import logo from "../../assets/images/small-logo.png";
 import { useOktaAuth } from "@okta/okta-react";
 import { useLayoutEffect } from "react";
@@ -19,6 +18,7 @@ import config from "../../config.json";
 import Accordion from "../accordion/accordion";
 import Header from "../Header/Header";
 import Message from "../Message/Message";
+import { RightDrawer } from "../rightpanel/rightDrawer";
 
 const fileCategories = {
   "application/pdf": "PDF",
@@ -38,6 +38,7 @@ const ChatBox = forwardRef((props, ref) => {
   const [chatSession, setChatSession] = useState([]);
   const [submitForm, setSubmitForm] = useState(false);
   const [rightPanelContent, setRightPanelContent] = useState("");
+  const [showRightPanelContent, setShowRightPanelContent] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   // const [showAddFileModal, setShowAddFileModal] = useState(false);
   const [base64Files, setBase64Files] = useState([]);
@@ -274,6 +275,7 @@ const ChatBox = forwardRef((props, ref) => {
 
   const onSourceClick = (chatMsg) => {
     setRightPanelContent(chatMsg);
+    setShowRightPanelContent(true);
   };
 
   const onSuggestionCardClick = (text) => {
@@ -349,6 +351,9 @@ const ChatBox = forwardRef((props, ref) => {
     const hasDoc = chatSession.some((chat) => chat.doc_uploaded === "Y");
     return !!hasDoc;
   };
+  const toggleRightSidepanel = () => {
+    setShowRightPanelContent(!showRightPanelContent);
+  };
   return (
     <div className="relative w-full">
       <Toaster />
@@ -374,169 +379,162 @@ const ChatBox = forwardRef((props, ref) => {
           onDownload={downloadJsonFile}
           hasActiveSession={!!latestSessionId}
         />
-        <div className="flex-1 w-full overflow-hidden bg-secondary">
-          <PanelGroup direction="horizontal">
-            <Panel defaultSize={panelSize[0]} order={1}>
-              <div className="h-full w-full flex flex-col">
-                <div
-                  ref={chatContainerRef}
-                  className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar"
-                >
-                  {isLoadingHistory ? (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="flex space-x-2 justify-center items-center">
-                        <span className="sr-only">Loading...</span>
-                        <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                        <div className="h-2 w-2 bg-primary opacity-85 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                        <div className="h-2 w-2 bg-primary opacity-70 rounded-full animate-bounce"></div>
-                      </div>
-                    </div>
-                  ) : chatSession.length > 0 ? (
-                    <Message
-                      chatSession={chatSession}
-                      handleCopyClick={handleCopyClick}
-                      submitBotQuery={submitBotQuery}
-                      handleChatSession={handleChatSession}
-                      loading={submitForm}
-                      onSourceClick={onSourceClick}
-                      showSources={rightPanelContent === "" ? false : true}
-                    />
-                  ) : (
-                    <div className="h-full flex items-center justify-center lg:px-32 md:px-10 px-4">
-                      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
-                        <div className="lg:col-span-3 md:col-span-2 col-span-1 flex justify-center mb-5">
-                          <div className="flex items-center gap-4 shadow-xl rounded-2xl bg-background p-4 max-w-xl">
-                            <div className="flex items-end gap-3">
-                              <div className="flex flex-col">
-                                <img
-                                  src={"/images/logo.png"}
-                                  alt="Sophia Logo"
-                                  className="w-36 mx-auto "
-                                />
-                                <span className="text-secondary-foreground text-sm font-medium mt-2">
-                                  Your Personal AI Assistant. How can I help?
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        {defaultSuggestion.map((item) => (
-                          <div
-                            key={item.id}
-                            className="border-muted border rounded-xl bg-background text-secondary-foreground shadow-md w-full p-5 cursor-pointer"
-                            onClick={() => onSuggestionCardClick(item.text)}
-                          >
-                            {item.text}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-4 p-2">
-                  <div className=" rounded-xl bg-background px-4">
-                    <div className="flex gap-2">
-                      {base64Files.map((file, index) => (
-                        <div
-                          key={index}
-                          className="text-sm flex gap-1 items-center mt-4 px-2 py-1 border border-secondary rounded-xl"
-                        >
-                          <div className="bg-primary p-2 rounded-lg">
-                            <FileText size={20} className="text-background" />
-                          </div>
-                          <div>
-                            <div className="font-semibold text-secondary-foreground">
-                              {file.fileName}
-                            </div>
-                            <div className="font-medium text-secondary">
-                              {file.fileType}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center h-16">
-                      <div {...getRootPropsClick()} className="">
-                        <input {...getInputPropsClick()} />
-                        <button className="text-primary hover:text-gray-700 p-2">
-                          <PaperclipIcon size={20} />
-                        </button>
-                      </div>
-                      <div className="flex-grow">
-                        <div {...getRootProps()} className="">
-                          <input {...getInputProps()} />
-                          <input
-                            type="text"
-                            value={message}
-                            onChange={(e) => setMessage(e.currentTarget.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Type a message..."
-                            className="w-full border rounded-xl focus:outline-none focus:border-primary pl-4 h-10 text-secondary-foreground "
-                          />
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => {
-                          submitQuery(message);
-                        }}
-                        disabled={submitForm}
-                        className={`ml-4 flex items-center justify-center bg-primary hover:scale-105 rounded-xl text-background px-4 py-2 ${
-                          submitForm &&
-                          "bg-gray-300 cursor-not-allowed opacity-50"
-                        }`}
-                      >
-                        <span>Send</span>
-                        <span className="ml-2">
-                          <svg
-                            className="w-4 h-4 transform rotate-45 -mt-px"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                            ></path>
-                          </svg>
-                        </span>
-                      </button>
-                    </div>
+        <div className="flex-1 w-full overflow-hidden bg-background">
+          {/* <PanelGroup direction="horizontal">
+            <Panel defaultSize={panelSize[0]} order={1}> */}
+          <div className="h-full w-full flex flex-col">
+            <div
+              ref={chatContainerRef}
+              className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar"
+            >
+              {isLoadingHistory ? (
+                <div className="h-full flex items-center justify-center">
+                  <div className="flex space-x-2 justify-center items-center">
+                    <span className="sr-only">Loading...</span>
+                    <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="h-2 w-2 bg-primary opacity-85 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="h-2 w-2 bg-primary opacity-70 rounded-full animate-bounce"></div>
                   </div>
                 </div>
+              ) : chatSession.length > 0 ? (
+                <Message
+                  chatSession={chatSession}
+                  handleCopyClick={handleCopyClick}
+                  submitBotQuery={submitBotQuery}
+                  handleChatSession={handleChatSession}
+                  loading={submitForm}
+                  onSourceClick={onSourceClick}
+                  showSources={showRightPanelContent}
+                />
+              ) : (
+                <div className="h-full flex items-center justify-center lg:px-32 md:px-10 px-4">
+                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
+                    <div className="lg:col-span-3 md:col-span-2 col-span-1 flex justify-center mb-5">
+                      <div className="flex items-center gap-4 shadow-xl rounded-2xl bg-card p-4 max-w-xl">
+                        <div className="flex items-end gap-3">
+                          <div className="flex flex-col">
+                            <img
+                              src={"/images/logo.png"}
+                              alt="Sophia Logo"
+                              className="w-36 mx-auto "
+                            />
+                            <span className="text-secondary-foreground text-sm font-medium mt-2">
+                              Your Personal AI Assistant. How can I help?
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {defaultSuggestion.map((item) => (
+                      <div
+                        key={item.id}
+                        className="border-muted border rounded-xl bg-card text-secondary-foreground shadow-md w-full p-5 cursor-pointer"
+                        onClick={() => onSuggestionCardClick(item.text)}
+                      >
+                        {item.text}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="mt-4 p-2">
+              <div className=" rounded-xl bg-card px-4">
+                <div className="flex gap-2">
+                  {base64Files.map((file, index) => (
+                    <div
+                      key={index}
+                      className="text-sm flex gap-1 items-center mt-4 px-2 py-1 border border-secondary rounded-xl"
+                    >
+                      <div className="bg-primary p-2 rounded-lg">
+                        <FileText size={20} className="text-background" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-secondary-foreground">
+                          {file.fileName}
+                        </div>
+                        <div className="font-medium text-secondary">
+                          {file.fileType}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center h-16">
+                  <div {...getRootPropsClick()} className="">
+                    <input {...getInputPropsClick()} />
+                    <button className="text-primary hover:text-gray-700 p-2">
+                      <PaperclipIcon size={20} />
+                    </button>
+                  </div>
+                  <div className="flex-grow">
+                    <div {...getRootProps()} className="">
+                      <input {...getInputProps()} />
+                      <input
+                        type="text"
+                        value={message}
+                        onChange={(e) => setMessage(e.currentTarget.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Type a message..."
+                        className="w-full border rounded-xl focus:outline-none focus:border-border pl-4 h-10 text-card-foreground bg-background "
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      submitQuery(message);
+                    }}
+                    disabled={submitForm}
+                    className={`ml-4 flex items-center justify-center bg-primary hover:scale-105 rounded-xl text-card px-4 py-2 ${
+                      submitForm && "bg-gray-300 cursor-not-allowed opacity-50"
+                    }`}
+                  >
+                    <span>Send</span>
+                    <span className="ml-2">
+                      <svg
+                        className="w-4 h-4 transform rotate-45 -mt-px"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                        ></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
-            </Panel>
-            {rightPanelContent && (
-              <>
-                <PanelResizeHandle hitAreaMargins={{ coarse: 15, fine: 15 }} />
+            </div>
+          </div>
+          {/* </Panel> */}
+
+          {rightPanelContent && (
+            <RightDrawer
+              isOpen={showRightPanelContent}
+              onClose={toggleRightSidepanel}
+              title="Proof of origin"
+            >
+              {/* <PanelResizeHandle hitAreaMargins={{ coarse: 15, fine: 15 }} />
                 <Panel
                   id="sidebar"
-                  // maxSize={35}
-                  // minSize={1}
                   defaultSize={panelSize[1]}
                   order={2}
                   className="transition-all duration-300"
-                >
-                  <div className="h-full bg-background p-4">
-                    <h1 className="flex items-center justify-between text-lg font-bold underline pb-2">
-                      Sources
-                      <button
-                        className="flex items-center justify-center  hover:text-black-600 rounded-xl text-foreground p-2"
-                        onClick={() => setRightPanelContent("")}
-                      >
-                        <X size={16} />
-                      </button>
-                    </h1>
-                    <div className="overflow-y-auto h-[calc(100%-3rem)] sidemenu-scrollbar">
-                      <Accordion accordionData={rightPanelContent} />
-                    </div>
-                  </div>
-                </Panel>
-              </>
-            )}
-          </PanelGroup>
+                > */}
+              <div className="h-full bg-card p-4 pr-0">
+                <div className="">
+                  <Accordion accordionData={rightPanelContent} />
+                </div>
+              </div>
+              {/* </Panel> */}
+            </RightDrawer>
+          )}
+          {/* </PanelGroup> */}
         </div>
       </div>
     </div>

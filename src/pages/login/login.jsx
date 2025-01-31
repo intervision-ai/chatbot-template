@@ -28,9 +28,9 @@ export const LoginPage = ({ onGetStarted }) => {
             {/* <div className="text-center text-base text-gray-500 font-normal mt-4">
               Secure Access, Anytime, Anywhere.
             </div> */}
-            <div className="text-center text-base text-secondary font-normal mt-4">
+            <div className="text-center text-base text-muted-foreground font-normal mt-4">
               Login with your{" "}
-              <span className="text-primary">{config.appName}</span> account
+              <span className="text-primary">{config.companyName}</span> account
             </div>
             <div className="flex justify-center items-center mt-3">
               <button

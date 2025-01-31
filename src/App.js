@@ -99,7 +99,6 @@ const App = () => {
   const handleChatSelect = (selectedSessionId) => {
     chatBoxRef.current?.handleChatSelect(selectedSessionId);
   };
-
   return (
     <Router>
       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>

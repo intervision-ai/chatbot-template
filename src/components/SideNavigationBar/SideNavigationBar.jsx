@@ -137,7 +137,7 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
             {/* <ScrollIndicator direction="up" /> */}
             <div
               ref={scrollContainerRef}
-              className="sidemenu-scrollbar overflow-y-auto max-h-[calc(100vh-15rem)]  px-4 scrollbar-thin scrollbar-track-neutral-900 scrollbar-thumb-neutral-700"
+              className="sidemenu-scrollbar overflow-y-auto max-h-[calc(100vh-15rem)]  px-4"
             >
               {recentChats.map((chat, index) => (
                 <div
@@ -226,7 +226,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
         onClick={() => setIsSidebarVisible(false)}
       ></div>
       <div
-        className={` flex flex-col h-screen bg-sidebar border-r-4 border-primary sm:relative absolute transition-all duration-300 z-50 ${
+        className={` flex flex-col h-screen bg-sidebar  sm:relative absolute transition-all duration-300 z-50 ${
           isSidebarVisible ? "w-64" : "w-0"
         }`}
       >
@@ -303,7 +303,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
                       " " +
                       (user?.family_name || "")}
                   </p>
-                  <p className="text-xs text-secondary w-[190px] overflow-hidden">
+                  <p className="text-xs text-muted-foreground w-[190px] overflow-hidden">
                     <span className="inline-block hover:translate-x-[-10%]  transition-transform duration-300">
                       {" "}
                       {user?.email?.toLowerCase() || ""}

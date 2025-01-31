@@ -103,7 +103,7 @@ const Message = (props) => {
                       </div>
                     </div>
                     {
-                      <div className="relative mr-3 text-sm bg-secondary-foreground py-3 px-4 shadow rounded-xl">
+                      <div className="relative mr-3 text-sm bg-card-foreground py-3 px-4 shadow rounded-xl">
                         {chatMsg.file_name && (
                           <div className="flex items-center justify-end mb-1 mr-14">
                             <div className="bg-background text-sm flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
@@ -114,10 +114,10 @@ const Message = (props) => {
                                 />
                               </div>
                               <div>
-                                <div className="font-semibold text-secondary-foreground">
+                                <div className="font-semibold text-card-foreground">
                                   {chatMsg.file_name}
                                 </div>
-                                <div className="font-medium text-secondary-foreground">
+                                <div className="font-medium text-card">
                                   {chatMsg.file_type}
                                 </div>
                               </div>
@@ -125,7 +125,7 @@ const Message = (props) => {
                           </div>
                         )}
                         <div
-                          className={`text-left text-background ${
+                          className={`text-left text-card ${
                             chatMsg.file_name ? "mt-2" : ""
                           }`}
                         >
@@ -152,7 +152,9 @@ const Message = (props) => {
                       alt="Assistant"
                       className="w-10 rounded-full "
                     />
-                    <div className="text-gray-500 text-xs text-center">Bot</div>
+                    <div className="text-secondary-foreground text-xs text-center">
+                      Bot
+                    </div>
                   </div>
 
                   {loading && lastIndex === idx ? (
@@ -167,7 +169,7 @@ const Message = (props) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="relative ml-1 text-sm bg-background py-4 px-4 shadow rounded-xl overflow-x-auto overflow-y-hidden">
+                    <div className="relative ml-1 text-sm bg-card text-card-foreground py-4 px-4 shadow rounded-xl overflow-x-auto overflow-y-hidden">
                       {chatMsg.botMessage && (
                         <>
                           <div
@@ -187,7 +189,7 @@ const Message = (props) => {
                               <div className="ml-auto">
                                 {rightPanelContentId !== idx || !showSources ? (
                                   <button
-                                    className="flex items-center justify-center bg-foreground hover:scale-105 rounded-xl text-background px-4 py-2 gap-1 text-sm"
+                                    className="flex items-center justify-center bg-primary hover:scale-105 rounded-xl text-card px-4 py-2 gap-1 text-sm"
                                     onClick={() =>
                                       toggleSourcePanel(chatMsg, idx)
                                     }
@@ -196,7 +198,7 @@ const Message = (props) => {
                                   </button>
                                 ) : (
                                   <button
-                                    className="flex items-center justify-center bg-foreground hover:scale-105 rounded-xl text-background px-4 py-2 gap-1 text-sm"
+                                    className="flex items-center justify-center bg-primary hover:scale-105 rounded-xl text-card px-4 py-2 gap-1 text-sm"
                                     onClick={() => toggleSourcePanel("", null)}
                                   >
                                     <BiArrowBack /> Hide sources

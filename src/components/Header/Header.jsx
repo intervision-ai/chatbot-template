@@ -1,5 +1,6 @@
 import { DownloadIcon, PlusCircle } from "lucide-react";
-import React from "react";
+import { ThemeToggle } from "../themeToggler/themeToggler";
+import { Button } from "../ui/button";
 
 const Header = ({ onDownload, hasActiveSession }) => {
   const handleDownloadClick = async () => {
@@ -8,22 +9,23 @@ const Header = ({ onDownload, hasActiveSession }) => {
   };
 
   return (
-    <header className="flex justify-between overflow-hidden flex-wrap gap-10 p-4 bg-white border border-gray-200 border-solid shadow-2xl max-md:px-5">
+    <header className="flex justify-between overflow-hidden flex-wrap gap-10 p-4 bg-card border border-border border-solid shadow-2xl max-md:px-5">
       <nav className="flex items-center gap-6 text-base font-semibold leading-none text-neutral-900 ml-3">
-        <button
+        <Button
+          variant={"outline"}
           id="newChat"
           onClick={() => (window.location.href = "/")}
-          className="flex gap-1 items-center justify-center p-2 rounded-xl border border-solid border-zinc-300"
+          className="flex gap-1 items-center justify-center rounded-2xl"
         >
           <div className="flex gap-2 justify-center items-center">
-            <PlusCircle className="text-gray-600 " size={16} />
+            <PlusCircle className="" size={16} />
 
-            <span className="self-stretch sm:text-sm text-xs font-medium text-gray-600 my-auto ">
+            <span className="self-stretch sm:text-sm text-xs font-mediummy-auto ">
               <span className="sm:block hidden">New chat</span>
               <span className="sm:hidden block">Chat</span>
             </span>
           </div>
-        </button>
+        </Button>
         {/* <img
 					loading="lazy"
 					src="https://cdn.builder.io/api/v1/image/assets/TEMP/217c60fc484a9a22baec4180958a7a0b25fa86a5e9babd05ff7fddd146d09788?placeholderIfAbsent=true&apiKey=e2f2768db341417fbc7b84021ea53a05"
@@ -43,7 +45,7 @@ const Header = ({ onDownload, hasActiveSession }) => {
 						<div className="flex shrink-0 w-7 bg-white h-[22px] rounded-[58px]"></div>
 					</div>
 				</div> */}
-        <nav className="flex gap-6">
+        <nav className="flex items-center gap-6">
           {/* <img
 						loading="lazy"
 						src="https://cdn.builder.io/api/v1/image/assets/TEMP/b487ca6f08969e08df46dfeb91700e13bb332bacfe2f80e08b9406d0777a0da3?placeholderIfAbsent=true&apiKey=e2f2768db341417fbc7b84021ea53a05"
@@ -62,13 +64,14 @@ const Header = ({ onDownload, hasActiveSession }) => {
 						alt="Navigation icon 3"
 						className="object-contain shrink-0 w-10 rounded aspect-square"
 					/> */}
+          <ThemeToggle />
           <div
             className={`hover:cursor-pointer flex items-center ${
               !hasActiveSession ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={handleDownloadClick}
           >
-            <DownloadIcon className="text-gray-600" size={20} />
+            <DownloadIcon className="text-card-foreground" size={20} />
           </div>
         </nav>
       </section>
