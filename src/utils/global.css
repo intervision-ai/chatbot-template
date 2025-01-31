@@ -25,6 +25,8 @@
     --ring: 215 20.2% 65.1%;
     --radius: 0.5rem;
     --sidebar: #464344;
+    --login-bg-start: #e4e6e7;
+    --login-bg-end: #ffccc4;
   }
 
   .dark {
@@ -38,7 +40,7 @@
     --popover-foreground: 215 20.2% 65.1%;
     --border: 216 34% 17%;
     --input: 216 34% 17%;
-    --card: 224 71% 4%;
+    --card: 0, 0%, 13%;
     --card-foreground: 213 31% 91%;
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 1.2%;
@@ -48,6 +50,8 @@
     --destructive-foreground: 210 40% 98%;
     --ring: 216 34% 17%;
     --sidebar: 228, 6%, 84%;
+    --login-bg-start: #e4e6e7;
+    --login-bg-end: #ffccc4;
   }
 }
 

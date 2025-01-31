@@ -45,6 +45,8 @@ export default {
         foreground: "var(--foreground)",
         info: "hsl(var(--info))",
         sidebar: "var(--sidebar)",
+        "loginbg-start": "var(--login-bg-start)",
+        "loginbg-end": "var(--login-bg-end)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",

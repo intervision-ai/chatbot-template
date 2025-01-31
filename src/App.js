@@ -109,7 +109,7 @@ const App = () => {
               element={
                 <LoginCallback
                   loadingElement={
-                    <div className="flex w-full flex-col bg-white items-center justify-center h-screen">
+                    <div className="flex w-full flex-col bg-background items-center justify-center h-screen">
                       <div className="mb-8">
                         <img src="/images/logo.png" className="h-12 w-auto" />
                       </div>

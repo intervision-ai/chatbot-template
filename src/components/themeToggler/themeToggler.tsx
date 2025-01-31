@@ -67,6 +67,14 @@ const ThemeToggle = () => {
         "--sidebar",
         config.branding.theme.light.sidebarBgColor
       );
+      root.style.setProperty(
+        "--login-bg-start",
+        config.branding.theme.light.loginBgStart
+      );
+      root.style.setProperty(
+        "--login-bg-end",
+        config.branding.theme.light.loginBgEnd
+      );
     } else {
       // Dark Theme Colors
       document.documentElement.style.setProperty(
@@ -92,6 +100,14 @@ const ThemeToggle = () => {
       document.documentElement.style.setProperty(
         "--sidebar",
         config.branding.theme.dark.sidebarBgColor
+      );
+      document.documentElement.style.setProperty(
+        "--login-bg-start",
+        config.branding.theme.light.loginBgStart
+      );
+      document.documentElement.style.setProperty(
+        "--login-bg-end",
+        config.branding.theme.light.loginBgEnd
       );
     }
   }

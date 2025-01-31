@@ -7,28 +7,28 @@ export const LoginPage = ({ onGetStarted }) => {
 
   return (
     <SignInBanner>
-      <div className="flex justify-center items-center w-full  bg-[#f7f6f3]">
+      <div className="flex justify-center items-center w-full h-[calc(100%-80px)]">
         <div className="p-4 md:p-4 sm:p-0">
           {/* <div className="flex justify-center items-center gap-3 ">
             <img src="/images/logo.png" alt="" className="h-16" />
           </div> */}
-          <div className="text-center text-2xl text-gray-700 font-semibold mt-2">
+          <div className="text-center text-2xl text-gray-700 font-semibold mt-2 pb-8">
             Welcome back!
           </div>
-          <div className="sm:px-20 px-8 rounded-2xl bg-white  p-4 mt-4">
+          <div className="mt-4">
             {/* <div className="text-center text-2xl text-gray-700 font-semibold mt-2">
               Login
             </div> */}
-            <div
+            {/* <div
               className="mx-auto bg-cover h-[250px] w-full sm:block hidden"
               style={{
                 backgroundImage: "url('/images/login-bg.png')",
               }}
-            ></div>
+            ></div> */}
             {/* <div className="text-center text-base text-gray-500 font-normal mt-4">
               Secure Access, Anytime, Anywhere.
             </div> */}
-            <div className="text-center text-base text-muted-foreground font-normal mt-4">
+            <div className="text-center text-base text-secondary-foreground font-normal mt-4">
               Login with your{" "}
               <span className="text-primary">{config.companyName}</span> account
             </div>
@@ -41,7 +41,7 @@ export const LoginPage = ({ onGetStarted }) => {
                   //   setIsLoading(false);
                   // }, 800);
                 }}
-                className="mb-4 flex items-center gap-1 bg-primary  py-2 px-3 border border-muted rounded-lg hover:scale-105 transition-all duration-300"
+                className="mb-4 flex items-center gap-1 bg-primary  py-2 px-6 border border-muted rounded-lg hover:scale-105 transition-all duration-300"
               >
                 {isLoading ? (
                   <Loader2

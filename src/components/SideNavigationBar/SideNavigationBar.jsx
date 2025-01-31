@@ -335,7 +335,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
                 >
                   {isLogoutLoading && (
                     <div className="flex justify-center w-full items-center">
-                      <Loader2 className="h-5 w-5 text-primary animate-spin" />
+                      <Loader2 className="h-5 w-5 text-white animate-spin" />
                     </div>
                   )}
                   {!isLogoutLoading && (

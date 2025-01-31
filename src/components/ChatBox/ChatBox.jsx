@@ -428,7 +428,7 @@ const ChatBox = forwardRef((props, ref) => {
                     {defaultSuggestion.map((item) => (
                       <div
                         key={item.id}
-                        className="border-muted border rounded-xl bg-card text-secondary-foreground shadow-md w-full p-5 cursor-pointer"
+                        className="rounded-xl bg-card text-secondary-foreground shadow-md w-full p-5 cursor-pointer"
                         onClick={() => onSuggestionCardClick(item.text)}
                       >
                         {item.text}
