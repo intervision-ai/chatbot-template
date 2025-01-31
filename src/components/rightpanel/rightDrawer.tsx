@@ -22,7 +22,7 @@ const RightDrawer: React.FC<DrawerProps> = ({
     <div className="relative">
       {/* Side Panel */}
       <div
-        className={`z-50 fixed top-0 right-0 ${width} h-screen rounded-tl-2xl bg-card text-card-foreground shadow-lg transform transition-transform duration-500 ease-in-out ${
+        className={`z-50 fixed top-0 right-0 sm:w-2/5 w-full h-screen rounded-tl-2xl bg-card text-card-foreground shadow-lg transform transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
