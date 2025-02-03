@@ -15,6 +15,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { useLayoutEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import config from "../../config.json";
+import { useTheme } from "../../store/theme";
 import Accordion from "../accordion/accordion";
 import Header from "../Header/Header";
 import Message from "../Message/Message";
@@ -31,6 +32,9 @@ const fileCategories = {
 
 const ChatBox = forwardRef((props, ref) => {
   // const config = useConfig();
+  const { theme } = useTheme();
+  console.log(theme);
+
   const defaultSuggestion = config.AppLevelConstants.defaultQuestions;
   const [latestSessionId, setLatestSessionId] = useState("");
   const [sessionStatus, setSessionStatus] = useState("new");
@@ -413,11 +417,19 @@ const ChatBox = forwardRef((props, ref) => {
                       <div className="flex items-center gap-4 shadow-xl rounded-2xl bg-card p-4 max-w-xl">
                         <div className="flex items-end gap-3">
                           <div className="flex flex-col">
-                            <img
-                              src={"/images/logo.png"}
-                              alt="Sophia Logo"
-                              className="w-36 mx-auto "
-                            />
+                            {theme === "dark" ? (
+                              <img
+                                src={"/images/dark-logo.png"}
+                                alt=""
+                                className="w-48 mx-auto "
+                              />
+                            ) : (
+                              <img
+                                src={"/images/logo.png"}
+                                alt=""
+                                className="w-48 mx-auto "
+                              />
+                            )}
                             <span className="text-secondary-foreground text-sm font-medium mt-2">
                               Your Personal AI Assistant. How can I help?
                             </span>

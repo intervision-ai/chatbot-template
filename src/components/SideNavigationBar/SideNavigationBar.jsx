@@ -14,6 +14,7 @@ import { BsClockHistory } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import config from "../../config.json";
 
+import { useTheme } from "../../store/theme";
 const RecentChats = ({ userEmail, onChatSelect }) => {
   const [recentChats, setRecentChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -164,6 +165,7 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
 };
 
 const SideNavigationBar = ({ onChatSelect }) => {
+  const { theme } = useTheme();
   const { oktaAuth } = useOktaAuth();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -257,12 +259,21 @@ const SideNavigationBar = ({ onChatSelect }) => {
             <header className="h-[108px] mb-4 pt-4 pl-4 pr-6 w-full font-semibold leading-tight  text-background">
               <div className="items-start py-4 ">
                 <div className=" my-auto relative w-full">
-                  <img
-                    loading="lazy"
-                    src={"/images/logo.png"}
-                    alt="logo"
-                    className="object-contain white shrink-0 self-stretch my-auto h-10"
-                  />
+                  {theme === "dark" ? (
+                    <img
+                      loading="lazy"
+                      src={"/images/dark-logo.png"}
+                      alt="logo"
+                      className="object-contain white shrink-0 self-stretch my-auto w-48"
+                    />
+                  ) : (
+                    <img
+                      loading="lazy"
+                      src={"/images/dark-logo.png"}
+                      alt="logo"
+                      className="object-contain white shrink-0 self-stretch my-auto w-48"
+                    />
+                  )}
                 </div>
               </div>
             </header>

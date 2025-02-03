@@ -2,37 +2,39 @@ import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import config from "../../config.json";
+import { useTheme } from "../../store/theme";
 import { Button } from "../ui/button";
 
 const ThemeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // Sync the theme with localStorage and document class
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
+    // const savedTheme = localStorage.getItem("theme");
+    if (theme === "dark") {
       document.documentElement.classList.add("dark");
       setIsDarkMode(true);
     } else {
       document.documentElement.classList.remove("dark");
       setIsDarkMode(false);
     }
-  }, []);
+  }, [theme]);
 
-  const toggleTheme = () => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    if (isDarkMode) {
-      // document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
+  // const toggleTheme = () => {
+  //   const root = window.document.documentElement;
+  //   root.classList.remove("light", "dark");
+  //   if (isDarkMode) {
+  //     // document.documentElement.classList.remove("dark");
+  //     document.documentElement.classList.add("light");
 
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
-    setIsDarkMode(!isDarkMode);
-  };
+  //     localStorage.setItem("theme", "light");
+  //   } else {
+  //     document.documentElement.classList.add("dark");
+  //     localStorage.setItem("theme", "dark");
+  //   }
+  //   setIsDarkMode(!isDarkMode);
+  // };
 
   useEffect(() => {
     applyTheme();

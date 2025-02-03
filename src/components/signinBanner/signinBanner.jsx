@@ -5,7 +5,7 @@ export const SignInBanner = ({ children }) => {
     <div className="grid sm:grid-cols-5 grid-cols-1 bg-gradient-to-b from-loginbg-start to-loginbg-end h-screen">
       <div className="sm:col-span-2 col-span-1">
         <div className="font-extrabold font-serif text-3xl pl-6 pt-6 text-primary">
-          <img src="/images/logo.png" alt="" className="h-12" />
+          <img src="/images/logo.png" alt="" className="h-8" />
         </div>
         {children}
       </div>

@@ -10,6 +10,7 @@ import SideNavigationBar from "./components/SideNavigationBar/SideNavigationBar"
 import config from "./config.json";
 import { LoginPage } from "./pages/login/login";
 import { Store } from "./store/Store";
+import { ThemeProvider } from "./store/theme";
 import "./utils/global.css";
 
 const oktaConfig = {
@@ -100,40 +101,42 @@ const App = () => {
     chatBoxRef.current?.handleChatSelect(selectedSessionId);
   };
   return (
-    <Router>
-      <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-        <div className="">
-          <Routes>
-            <Route
-              path="/login/callback"
-              element={
-                <LoginCallback
-                  loadingElement={
-                    <div className="flex w-full flex-col bg-background items-center justify-center h-screen">
-                      <div className="mb-8">
-                        <img src="/images/logo.png" className="h-12 w-auto" />
+    <ThemeProvider>
+      <Router>
+        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
+          <div className="">
+            <Routes>
+              <Route
+                path="/login/callback"
+                element={
+                  <LoginCallback
+                    loadingElement={
+                      <div className="flex w-full flex-col bg-background items-center justify-center h-screen">
+                        <div className="mb-8">
+                          <img src="/images/logo.png" className="h-12 w-auto" />
+                        </div>
+                        <Loader2 className="h-8 w-8 text-[#000000] animate-spin" />
                       </div>
-                      <Loader2 className="h-8 w-8 text-[#000000] animate-spin" />
-                    </div>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/*"
-              element={
-                <RequireAuth>
-                  <ProtectedContent
-                    onChatSelect={handleChatSelect}
-                    chatBoxRef={chatBoxRef}
+                    }
                   />
-                </RequireAuth>
-              }
-            />
-          </Routes>
-        </div>
-      </Security>
-    </Router>
+                }
+              />
+              <Route
+                path="/*"
+                element={
+                  <RequireAuth>
+                    <ProtectedContent
+                      onChatSelect={handleChatSelect}
+                      chatBoxRef={chatBoxRef}
+                    />
+                  </RequireAuth>
+                }
+              />
+            </Routes>
+          </div>
+        </Security>
+      </Router>
+    </ThemeProvider>
   );
 };
 
