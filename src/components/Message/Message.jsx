@@ -236,7 +236,7 @@ const Message = (props) => {
                                 ) : (
                                   <Copy
                                     size={16}
-                                    className="text-muted-foreground hover:text-secondary-foreground"
+                                    className="text-gray-500 hover:text-secondary-foreground"
                                   />
                                 )}
                               </button>
@@ -246,16 +246,16 @@ const Message = (props) => {
                                     e.preventDefault();
                                     handleRegenerateResponse(chatMsg.message);
                                   }}
-                                  className="text-muted-foreground  rounded-md text-xs py-0.5 px-2 inline-flex items-center"
+                                  className="text-gray-500 rounded-md text-xs py-0.5 px-2 inline-flex items-center"
                                 >
                                   <RefreshCcw
                                     size={16}
-                                    className="hover:text-secondary-foreground text-muted-foreground"
+                                    className="hover:text-secondary-foreground text-gray-500"
                                   />
                                 </button>
                               )}
                             </div>
-                            <div className="text-xs text-end mt-3 -mb-2 mr-2 text-muted-foreground">
+                            <div className="text-xs text-end mt-3 -mb-2 mr-2 text-gray-500">
                               <TimeAgo
                                 date={messageTimestamp}
                                 formatter={customFormatter}

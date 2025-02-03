@@ -42,7 +42,7 @@ const MessageFeedback = ({ message, onFeedback }) => {
           ${
             feedbackState === "1"
               ? "text-green-500"
-              : "text-muted-foreground hover:text-secondary-foreground"
+              : "text-gray-500 hover:text-secondary-foreground"
           }
           ${isLikeAnimating ? "scale-125" : "scale-100"}
           transform active:scale-95`}
@@ -60,7 +60,7 @@ const MessageFeedback = ({ message, onFeedback }) => {
           ${
             feedbackState === "-1"
               ? " text-red-500"
-              : "text-muted-foreground hover:text-secondary-foreground"
+              : "text-gray-500 hover:text-secondary-foreground"
           }
           ${isDislikeAnimating ? "scale-125" : "scale-100"}
           transform active:scale-95`}
