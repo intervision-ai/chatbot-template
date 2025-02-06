@@ -103,7 +103,7 @@ const Message = (props) => {
                       </div>
                     </div>
                     {
-                      <div className="relative mr-3 text-sm bg-card-foreground py-3 px-4 shadow rounded-xl">
+                      <div className="relative mr-3 text-sm bg-card-foreground py-3 px-4 shadow rounded-3xl rounded-tr-sm">
                         {chatMsg.file_name && (
                           <div className="flex items-center justify-end mb-1 mr-14">
                             <div className="bg-background text-sm flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
@@ -169,7 +169,7 @@ const Message = (props) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="relative ml-1 text-sm bg-card text-card-foreground py-4 px-4 shadow rounded-xl overflow-x-auto overflow-y-hidden">
+                    <div className="relative ml-1 text-sm bg-card text-card-foreground py-4 px-4 shadow rounded-3xl overflow-x-auto overflow-y-hidden">
                       {chatMsg.botMessage && (
                         <>
                           <div

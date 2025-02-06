@@ -37,7 +37,7 @@ const RightDrawer: React.FC<DrawerProps> = ({
               <ArrowLeft size={20} className="text-card-foreground" />
             </Button>
           </div>
-          <h1 className="text-xl text-card-foreground font-bold w-full">
+          <h1 className="text-xl text-secondary-foreground font-bold w-full">
             {title}
           </h1>
           <div className="w-6">

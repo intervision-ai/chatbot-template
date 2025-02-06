@@ -27,7 +27,9 @@ const Accordion = ({ accordionData = [] }) => {
             aria-expanded={activeIndex === index}
             aria-controls={`accordion-content-${index}`}
           >
-            <span className="text-sm font-semibold ">{item.name}</span>
+            <span className="text-sm font-semibold text-secondary-foreground max-w-[95%]">
+              {item.uri?.split("/")[item.uri?.split("/").length - 1]}
+            </span>
             {activeIndex === index ? (
               <ChevronUp className="w-4 h-4 " />
             ) : (

@@ -14,24 +14,24 @@
       "light": {
         "background": "#eee",
         "foreground": "#000000",
-        "primaryBgColor": "#DF1A28",
+        "primaryBgColor": "#0092c9",
         "primaryFgColor": "#3498db",
         "secondaryBgColor": "#D4D5D9",
         "secondaryFgColor": "#464344",
         "sidebarBgColor": "#464344",
         "loginBgStart": "#e4e6e7",
-        "loginBgEnd": "#ffccc4"
+        "loginBgEnd": "#1cbabd"
       },
       "dark": {
         "background": "#111",
         "foreground": "#FFFFFF",
-        "primaryBgColor": "#DF1A28",
+        "primaryBgColor": "#0092c9",
         "primaryFgColor": "#3498db",
         "secondaryBgColor": "#464344",
         "secondaryFgColor": "#B7B7BC",
         "sidebarBgColor": "#000000",
         "loginBgStart": "#e4e6e7",
-        "loginBgEnd": "#ffccc4"
+        "loginBgEnd": "#1cbabd"
       }
     }
   },

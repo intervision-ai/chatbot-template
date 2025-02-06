@@ -10,7 +10,7 @@ import SideNavigationBar from "./components/SideNavigationBar/SideNavigationBar"
 import config from "./config.json";
 import { LoginPage } from "./pages/login/login";
 import { Store } from "./store/Store";
-import { ThemeProvider } from "./store/theme";
+import { ThemeProvider, useTheme } from "./store/theme";
 import "./utils/global.css";
 
 const oktaConfig = {
@@ -20,6 +20,7 @@ const oktaConfig = {
 };
 // Custom SecureRoute component
 const RequireAuth = ({ children }) => {
+  const { theme } = useTheme();
   const { oktaAuth, authState } = useOktaAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -41,7 +42,83 @@ const RequireAuth = ({ children }) => {
 
     checkAuth();
   }, [oktaAuth]);
+  useEffect(() => {
+    applyTheme();
+  }, [theme]);
 
+  function applyTheme() {
+    if (theme === "light") {
+      const root = document.documentElement;
+
+      // Light Theme Colors
+      root.style.setProperty(
+        "--background",
+        config.branding.theme.light.background
+      );
+      root.style.setProperty(
+        "--primary",
+        config.branding.theme.light.primaryBgColor
+      );
+      root.style.setProperty(
+        "--primary-foreground",
+        config.branding.theme.light.primaryFgColor
+      );
+      root.style.setProperty(
+        "--secondary",
+        config.branding.theme.light.secondaryBgColor
+      );
+      root.style.setProperty(
+        "--secondary-foreground",
+        config.branding.theme.light.secondaryFgColor
+      );
+      root.style.setProperty(
+        "--sidebar",
+        config.branding.theme.light.sidebarBgColor
+      );
+      root.style.setProperty(
+        "--login-bg-start",
+        config.branding.theme.light.loginBgStart
+      );
+      root.style.setProperty(
+        "--login-bg-end",
+        config.branding.theme.light.loginBgEnd
+      );
+    } else {
+      // Dark Theme Colors
+      document.documentElement.style.setProperty(
+        "--background",
+        config.branding.theme.dark.background
+      );
+      document.documentElement.style.setProperty(
+        "--primary",
+        config.branding.theme.dark.primaryBgColor
+      );
+      document.documentElement.style.setProperty(
+        "--primary-foreground",
+        config.branding.theme.dark.primaryFgColor
+      );
+      document.documentElement.style.setProperty(
+        "--secondary",
+        config.branding.theme.dark.secondaryBgColor
+      );
+      document.documentElement.style.setProperty(
+        "--secondary-foreground",
+        config.branding.theme.dark.secondaryFgColor
+      );
+      document.documentElement.style.setProperty(
+        "--sidebar",
+        config.branding.theme.dark.sidebarBgColor
+      );
+      document.documentElement.style.setProperty(
+        "--login-bg-start",
+        config.branding.theme.dark.loginBgStart
+      );
+      document.documentElement.style.setProperty(
+        "--login-bg-end",
+        config.branding.theme.dark.loginBgEnd
+      );
+    }
+  }
   if (isAuthenticated === null) {
     return (
       <div className="flex w-full flex-col bg-white items-center justify-center h-screen">
