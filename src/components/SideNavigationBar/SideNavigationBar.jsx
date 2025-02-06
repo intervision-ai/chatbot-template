@@ -234,7 +234,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
       >
         <div
           className={`absolute z-50  ${
-            isSidebarVisible ? "-right-1 -top-1" : "-right-9 top-3 sm:top-4"
+            isSidebarVisible ? "-right-1 -top-1" : "-right-9 top-4 sm:top-4"
           }`}
         >
           <button
@@ -256,7 +256,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
         </div>
         <div className="flex overflow-hidden flex-col grow pb-1 w-full bg-sidebar">
           <div className="flex flex-col items-center">
-            <header className="h-[108px] mb-4 pt-4 pl-4 pr-6 w-full font-semibold leading-tight  text-background">
+            <header className="h-[108px] mb-4 pt-1 pl-4 pr-6 w-full font-semibold leading-tight  text-background">
               <div className="items-start py-4 ">
                 <div className=" my-auto relative w-full">
                   {theme === "dark" ? (
