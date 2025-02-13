@@ -1,9 +1,18 @@
 import { Loader2 } from "lucide-react";
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { SignInBanner } from "../../components/signinBanner/signinBanner";
 import config from "../../config.json";
-export const LoginPage = ({ onGetStarted }) => {
-  const [isLoading, setIsLoading] = React.useState(false);
+import { useAuth } from "../../contexts/authContext";
+export const LoginPage = () => {
+  const { signIn, isLoading, user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+  // const [isLoading, setIsLoading] = React.useState(false);
 
   return (
     <SignInBanner>
@@ -35,8 +44,8 @@ export const LoginPage = ({ onGetStarted }) => {
             <div className="flex justify-center items-center mt-3">
               <button
                 onClick={() => {
-                  setIsLoading(true);
-                  onGetStarted();
+                  // setIsLoading(true);
+                  signIn();
                   // setTimeout(() => {
                   //   setIsLoading(false);
                   // }, 800);

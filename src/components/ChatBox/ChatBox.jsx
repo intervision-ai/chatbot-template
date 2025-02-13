@@ -11,10 +11,11 @@ import {
 import { useDropzone } from "react-dropzone";
 // import { useAuth } from "react-oidc-context";
 // import logo from "../../assets/images/small-logo.png";
-import { useOktaAuth } from "@okta/okta-react";
+// import { useOktaAuth } from "@okta/okta-react";
 import { useLayoutEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import config from "../../config.json";
+import { useAuth } from "../../contexts/authContext";
 import { useTheme } from "../../store/theme";
 import Accordion from "../accordion/accordion";
 import Header from "../Header/Header";
@@ -48,27 +49,27 @@ const ChatBox = forwardRef((props, ref) => {
   const [base64Files, setBase64Files] = useState([]);
   const [panelSize, setPanelSize] = useState([100, 0]);
   const chatContainerRef = useRef(null);
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { oktaAuth } = useOktaAuth();
+  // const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     console.log(chatSession);
   }, [chatSession]);
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const authenticated = await oktaAuth.isAuthenticated();
-        setIsAuthenticated(authenticated);
-        setUser(authenticated ? await oktaAuth.getUser() : null);
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        setIsAuthenticated(false);
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const authenticated = await oktaAuth.isAuthenticated();
+  //       setIsAuthenticated(authenticated);
+  //       setUser(authenticated ? await oktaAuth.getUser() : null);
+  //     } catch (error) {
+  //       console.error("Auth check failed:", error);
+  //       setIsAuthenticated(false);
+  //     }
+  //   };
 
-    checkAuth();
-  }, [oktaAuth]);
+  //   checkAuth();
+  // }, [oktaAuth]);
 
   useEffect(() => {
     if (chatContainerRef.current) {

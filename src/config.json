@@ -35,11 +35,33 @@
       }
     }
   },
-  "oktaConfig": {
-    "issuer": "https://auth.hostedcafe.com/oauth2/default",
-    "clientId": "0oa1flvu3p3ayr02z358",
-    "redirectUri": "/login/callback"
+  "authConfigs": {
+    "activeProvider": "okta",
+    "providers": {
+      "okta": {
+        "authority": "https://auth.hostedcafe.com/oauth2/default",
+        "clientId": "0oa1flvu3p3ayr02z358",
+        "redirectUri": "/login/callback",
+        "responseType": "code",
+        "scope": "openid profile email"
+      },
+      "cognito": {
+        "authority": "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_UlGn7eD6e",
+        "clientId": "7l2c8khvcgkidoqt8662g4ks7a",
+        "redirectUri": "/login/callback",
+        "responseType": "code",
+        "scope": "openid profile email"
+      },
+      "entra": {
+        "authority": "https://login.microsoftonline.com/795f5108-28ff-41fb-8d4a-9082576511a2/",
+        "clientId": "d6146952-b54e-4076-9e44-590ead268453",
+        "redirectUri": "/login/callback",
+        "responseType": "code",
+        "scope": "openid profile email"
+      }
+    }
   },
+
   "AppLevelConstants": {
     "defaultQuestions": [
       {

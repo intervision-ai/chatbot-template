@@ -14,10 +14,15 @@ export interface IConfig {
       secondaryFgColor: string;
     };
   };
-  oktaConfig: {
-    issuer: string | undefined;
-    clientId: string | undefined;
-    redirectUri: string;
+  authConfigs: {
+    activeProvider: string;
+    providers: {
+      authority: string | undefined;
+      clientId: string | undefined;
+      redirectUri: string;
+      responseType: string;
+      scope: string;
+    };
   };
   AppLevelConstants: {
     defaultQuestions: {

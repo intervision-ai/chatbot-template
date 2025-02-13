@@ -1,4 +1,3 @@
-import { useOktaAuth } from "@okta/okta-react";
 import axios from "axios";
 import {
   ChevronDown,
@@ -14,6 +13,7 @@ import { BsClockHistory } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import config from "../../config.json";
 
+import { useAuth } from "../../contexts/authContext";
 import { useTheme } from "../../store/theme";
 const RecentChats = ({ userEmail, onChatSelect }) => {
   const [recentChats, setRecentChats] = useState([]);
@@ -166,29 +166,29 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
 
 const SideNavigationBar = ({ onChatSelect }) => {
   const { theme } = useTheme();
-  const { oktaAuth } = useOktaAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [user, setUser] = useState();
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
-  // console.log(user);
+  console.log(user);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const authenticated = await oktaAuth.isAuthenticated();
-        setIsAuthenticated(authenticated);
-        setUser(authenticated ? await oktaAuth.getUser() : null);
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        setIsAuthenticated(false);
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const authenticated = await oktaAuth.isAuthenticated();
+  //       setIsAuthenticated(authenticated);
+  //       setUser(authenticated ? await oktaAuth.getUser() : null);
+  //     } catch (error) {
+  //       console.error("Auth check failed:", error);
+  //       setIsAuthenticated(false);
+  //     }
+  //   };
 
-    checkAuth();
-  }, [oktaAuth]);
+  //   checkAuth();
+  // }, [oktaAuth]);
 
   const isActive = (path) => {
     if (path === "/") return location.pathname === path;
@@ -303,19 +303,17 @@ const SideNavigationBar = ({ onChatSelect }) => {
                 <img
                   src={
                     user?.picture ||
-                    `https://www.gravatar.com/avatar/${user?.email}?d=mp`
+                    `https://www.gravatar.com/avatar/${user?.name}?d=mp`
                   }
                   alt="User Avatar"
                   className="w-8 h-8 rounded-full mr-1"
                 />
                 <div className="">
                   <p className="text-sm font-medium text-muted">
-                    {(user?.given_name || user?.email?.split("@")[0] || "") +
-                      " " +
-                      (user?.family_name || "")}
+                    {user?.name || user?.email?.split("@")[0] || ""}
                   </p>
                   <p className="text-xs text-muted-foreground w-[190px] overflow-hidden">
-                    <span className="inline-block hover:translate-x-[-10%]  transition-transform duration-300">
+                    <span className="inline-block hover:translate-x-[-20%]  transition-transform duration-300">
                       {" "}
                       {user?.email?.toLowerCase() || ""}
                     </span>
@@ -337,9 +335,7 @@ const SideNavigationBar = ({ onChatSelect }) => {
                 <button
                   onClick={async () => {
                     setIsLogoutLoading(true);
-                    await oktaAuth.signOut();
-                    oktaAuth.tokenManager.clear();
-                    window.location.replace(window.location.origin);
+                    await signOut();
                     setIsLogoutLoading(false);
                   }}
                   className="w-full text-left text-base px-4 py-2 rounded-lg bg-primary text-background flex items-center"
