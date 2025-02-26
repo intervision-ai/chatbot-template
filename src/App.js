@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   Navigate,
@@ -186,28 +187,29 @@ const App = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
-          <div className="font-worksans">
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/login/callback" element={<LoginCallback />} />
-              <Route element={<PrivateRoute />}>
-                <Route
-                  path="/"
-                  element={
-                    <div className="flex flex-row min-h-screen w-full overflow-x-hidden">
-                      <SideNavigationBar onChatSelect={handleChatSelect} />
-                      <ChatContainer ref={chatBoxRef} />
-                    </div>
-                  }
-                />
-                <Route path="/chat" element={<Navigate to="/" />} />
-              </Route>
+        <TooltipProvider>
+          <Router>
+            <div className="font-worksans">
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login/callback" element={<LoginCallback />} />
+                <Route element={<PrivateRoute />}>
+                  <Route
+                    path="/"
+                    element={
+                      <div className="flex flex-row min-h-screen w-full overflow-x-hidden">
+                        <SideNavigationBar onChatSelect={handleChatSelect} />
+                        <ChatContainer ref={chatBoxRef} />
+                      </div>
+                    }
+                  />
+                  <Route path="/chat" element={<Navigate to="/" />} />
+                </Route>
 
-              {/* Redirects */}
-              {/* 404 Page */}
-              <Route path="*" element={<NotFoundPage />} />
-              {/* <Route
+                {/* Redirects */}
+                {/* 404 Page */}
+                <Route path="*" element={<NotFoundPage />} />
+                {/* <Route
                   path="/*"
                   element={
                     <PrivateRoute>
@@ -218,9 +220,10 @@ const App = () => {
                     </PrivateRoute>
                   }
                 /> */}
-            </Routes>
-          </div>
-        </Router>
+              </Routes>
+            </div>
+          </Router>
+        </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
   );

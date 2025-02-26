@@ -1,5 +1,6 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import FeedbackModal from "./FeedbackModal";
 
 const MessageFeedback = ({ message, onFeedback }) => {
@@ -52,42 +53,57 @@ const MessageFeedback = ({ message, onFeedback }) => {
         placeholderText="What was unsatisfying about this response?"
       />
       <div className="flex items-center">
-        <button
-          onClick={() => handleFeedbackWithModal("1")}
-          className={`p-1.5 rounded-full transition-all duration-200
+        <Tooltip>
+          <TooltipTrigger>
+            {" "}
+            <button
+              onClick={() => handleFeedbackWithModal("positive")}
+              className={`p-1.5 rounded-full transition-all duration-200
           ${
-            feedbackState === "1"
+            feedbackState === "positive"
               ? "text-green-500"
               : "text-slate-500 hover:text-card-foreground"
           }
           ${isLikeAnimating ? "scale-125" : "scale-100"}
           transform active:scale-95`}
-          aria-label="Like message"
-        >
-          <ThumbsUp
-            size={16}
-            className={`transition-colors duration-200
+              aria-label="Like message"
+            >
+              <ThumbsUp
+                size={16}
+                className={`transition-colors duration-200
             ${isLikeAnimating ? "animate-bounce" : ""}`}
-          />
-        </button>
-        <button
-          onClick={() => handleFeedbackWithModal("-1")}
-          className={`p-1.5 rounded-full transition-all duration-200
+              />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Good response</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger>
+            <button
+              onClick={() => handleFeedbackWithModal("negative")}
+              className={`p-1.5 rounded-full transition-all duration-200
           ${
-            feedbackState === "-1"
+            feedbackState === "negative"
               ? " text-red-500"
               : "text-slate-500 hover:text-card-foreground"
           }
           ${isDislikeAnimating ? "scale-125" : "scale-100"}
           transform active:scale-95`}
-          aria-label="Dislike message"
-        >
-          <ThumbsDown
-            size={16}
-            className={`transition-colors duration-200
+              aria-label="Dislike message"
+            >
+              <ThumbsDown
+                size={16}
+                className={`transition-colors duration-200
             ${isDislikeAnimating ? "animate-bounce" : ""}`}
-          />
-        </button>
+              />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Bad response</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </>
   );

@@ -2,23 +2,32 @@ import axios from "axios";
 import {
   ChevronDown,
   ChevronUp,
+  EllipsisVertical,
   ListCheck,
   Loader2,
-  Menu,
   PowerIcon,
-  X,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { BsClockHistory } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import config from "../../config.json";
 
+import { MdMenuOpen } from "react-icons/md";
 import { useAuth } from "../../contexts/authContext";
 import { useTheme } from "../../store/theme";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdownMenu";
 const RecentChats = ({ userEmail, onChatSelect }) => {
   const [recentChats, setRecentChats] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState();
+  const [activeSession, setActiveSession] = useState(null);
   const [scrollState, setScrollState] = useState({
     canScrollUp: false,
     canScrollDown: false,
@@ -36,6 +45,7 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
         return;
       }
       try {
+        setIsLoading(true);
         const response = await axios.post(config.apiUrls.getChatHistory, {
           email: userEmail,
         });
@@ -143,16 +153,53 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
               {recentChats.map((chat, index) => (
                 <div
                   key={index}
-                  onClick={() => onChatSelect(chat.sessionId)}
-                  className="flex items-center gap-3 px-4 py-2 text-neutral-200 rounded-xl hover:bg-neutral-200 hover:text-gray-800 transition-colors duration-200 group cursor-pointer"
+                  onClick={() => {
+                    onChatSelect(chat.sessionId);
+                    setActiveSession(chat.sessionId);
+                  }}
+                  onMouseEnter={() => {
+                    setHoveredIndex(index);
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredIndex(null);
+                  }}
+                  className={` mb-1 flex items-center gap-1 pl-4 py-2 rounded-xl hover:bg-neutral-200 hover:text-gray-800 transition-colors duration-200 group cursor-pointer ${
+                    activeSession === chat.sessionId
+                      ? "bg-neutral-200 text-gray-800"
+                      : "text-neutral-200"
+                  }`}
                 >
                   <ListCheck
-                    className="flex-shrink-0 group-hover:text-primary transition-colors duration-200"
+                    className={`flex-shrink-0 group-hover:text-primary transition-colors duration-200 ${
+                      activeSession === chat.sessionId && "text-primary"
+                    }`}
                     size={18}
                   />
-                  <span className="text-sm font-normal whitespace-nowrap overflow-hidden leading-relaxed">
+                  <span className="text-base font-normal whitespace-nowrap truncate leading-relaxed">
                     {chat.Input_query}
                   </span>
+                  <div
+                    className={`${
+                      hoveredIndex === index || activeSession === chat.sessionId
+                        ? "visible"
+                        : "invisible"
+                    }`}
+                  >
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        className="pr-2 py-1 outline-none"
+                        autoFocus={false}
+                      >
+                        <EllipsisVertical size={18} />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem>
+                          <Trash2 className="text-destructive" />
+                          <span className="text-destructive">Delete</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
               ))}
             </div>
@@ -234,31 +281,31 @@ const SideNavigationBar = ({ onChatSelect }) => {
       >
         <div
           className={`absolute z-50  ${
-            isSidebarVisible ? "-right-1 -top-1" : "-right-9 top-4 sm:top-4"
+            isSidebarVisible ? "-right-0 top-5" : "-right-7 top-5 sm:top-5"
           }`}
         >
           <button
             onClick={() => setIsSidebarVisible(!isSidebarVisible)}
-            className="p-2 text-background z-20"
+            className="text-background z-20"
           >
             {isSidebarVisible ? (
-              <X
-                className="text-primary transition-transform rotate-90 hover:rotate-0 z-20"
-                size={24}
+              <MdMenuOpen
+                className="text-white transition-transform  z-20"
+                size={28}
               />
             ) : (
-              <Menu
-                className="text-primary hover:scale-125 transition-transform"
-                size={24}
+              <MdMenuOpen
+                className="text-card-foreground transition-transform rotate-180"
+                size={28}
               />
             )}
           </button>
         </div>
         <div className="flex overflow-hidden flex-col grow pb-1 w-full bg-sidebar">
           <div className="flex flex-col items-center">
-            <header className="h-[108px] mb-4 pt-1 pl-4 pr-6 w-full font-semibold leading-tight  text-background">
-              <div className="items-start py-4 ">
-                <div className=" my-auto relative w-full">
+            <header className="h-[108px] mb-4 pt-2 pl-4 w-full font-semibold leading-tight  text-background">
+              <div className="items-start  ">
+                <div className=" my-auto relative w-full pr-10">
                   {theme === "dark" ? (
                     <img
                       loading="lazy"

@@ -5,6 +5,7 @@ import { BiArrowBack } from "react-icons/bi";
 import { BsArrowRight } from "react-icons/bs";
 import TimeAgo from "react-timeago";
 import config from "../../config.json";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import MessageFeedback from "./MessageFeedback";
 import "./index.css";
 const Message = (props) => {
@@ -103,10 +104,10 @@ const Message = (props) => {
                       </div>
                     </div>
                     {
-                      <div className="relative mr-3 text-sm bg-card-foreground py-3 px-4 shadow rounded-3xl rounded-tr-sm">
+                      <div className="relative mr-3 text-base bg-card-foreground py-3 px-4 shadow rounded-3xl rounded-tr-sm">
                         {chatMsg.file_name && (
                           <div className="flex items-center justify-end mb-1 mr-14">
-                            <div className="bg-background text-sm flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
+                            <div className="bg-background text-base flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
                               <div className="bg-primary p-2 rounded-lg">
                                 <FileText
                                   size={20}
@@ -169,7 +170,7 @@ const Message = (props) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="relative ml-1 text-sm bg-card text-card-foreground py-4 px-4 shadow rounded-3xl overflow-x-auto overflow-y-hidden">
+                    <div className="relative ml-1 text-base bg-card text-card-foreground py-4 px-4 shadow rounded-3xl overflow-x-auto overflow-y-hidden">
                       {chatMsg.botMessage && (
                         <>
                           <div
@@ -220,41 +221,57 @@ const Message = (props) => {
                                 message={chatMsg}
                                 onFeedback={handleFeedback}
                               />
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleCopyClick(chatMsg.botMessage);
-                                  handleTextCopied();
-                                }}
-                                className="text-secondary-foreground rounded-md text-xs py-0.5 px-2 inline-flex items-center"
-                              >
-                                {textCopied ? (
-                                  <CheckCheck
-                                    size={16}
-                                    className="text-primary "
-                                  />
-                                ) : (
-                                  <Copy
-                                    size={16}
-                                    className="text-gray-500 hover:text-secondary-foreground"
-                                  />
-                                )}
-                              </button>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleCopyClick(chatMsg.botMessage);
+                                      handleTextCopied();
+                                    }}
+                                    className="text-slate-500 rounded-md text-xs py-0.5 px-2 inline-flex items-center"
+                                  >
+                                    {textCopied ? (
+                                      <CheckCheck
+                                        size={16}
+                                        className="text-primary "
+                                      />
+                                    ) : (
+                                      <Copy
+                                        size={16}
+                                        className="text-slate-500 hover:text-secondary-foreground"
+                                      />
+                                    )}
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>Copy</TooltipContent>
+                              </Tooltip>
+
                               {lastIndex === idx && (
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    handleRegenerateResponse(chatMsg.message);
-                                  }}
-                                  className="text-gray-500 rounded-md text-xs py-0.5 px-2 inline-flex items-center"
-                                >
-                                  <RefreshCcw
-                                    size={16}
-                                    className="hover:text-secondary-foreground text-gray-500"
-                                  />
-                                </button>
+                                <>
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleRegenerateResponse(
+                                            chatMsg.message
+                                          );
+                                        }}
+                                        className="text-gray-500 rounded-md text-xs py-0.5 px-2 inline-flex items-center"
+                                      >
+                                        <RefreshCcw
+                                          size={16}
+                                          className="hover:text-secondary-foreground text-gray-500"
+                                        />
+                                      </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Regenerate</TooltipContent>
+                                  </Tooltip>
+                                </>
                               )}
                             </div>
+
                             <div className="text-xs text-end mt-3 -mb-2 mr-2 text-gray-500">
                               <TimeAgo
                                 date={messageTimestamp}

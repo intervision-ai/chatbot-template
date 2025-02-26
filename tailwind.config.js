@@ -129,4 +129,7 @@ export default {
         /bg-(red|blue|green|purple|pink|yellow|indigo)-(50|100|200|300|400|500|600|700|800|900)/,
     },
   ],
+  corePlugins: {
+    scrollbar: false, // Ensure the core scrollbar styles are disabled
+  },
 };

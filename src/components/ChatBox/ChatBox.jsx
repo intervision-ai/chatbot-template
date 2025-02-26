@@ -49,6 +49,7 @@ const ChatBox = forwardRef((props, ref) => {
   const [base64Files, setBase64Files] = useState([]);
   const [panelSize, setPanelSize] = useState([100, 0]);
   const chatContainerRef = useRef(null);
+  const textareaRef = useRef();
   // const [user, setUser] = useState(null);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { user, isAuthenticated } = useAuth();
@@ -56,6 +57,13 @@ const ChatBox = forwardRef((props, ref) => {
   useEffect(() => {
     console.log(chatSession);
   }, [chatSession]);
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [message]);
+
   // useEffect(() => {
   //   const checkAuth = async () => {
   //     try {
@@ -272,9 +280,12 @@ const ChatBox = forwardRef((props, ref) => {
     return isoString.replace(/\.\d{3}Z$/, `.${microseconds}`);
   }
   function handleKeyDown(event) {
-    if (event.key === "Enter" && !submitForm) {
-      submitQuery(message);
-      setSubmitForm(true);
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      if (!submitForm) {
+        submitQuery(message?.trim());
+        // setSubmitForm(true);
+      }
     }
   }
 
@@ -473,7 +484,7 @@ const ChatBox = forwardRef((props, ref) => {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center h-16">
+                <div className="flex items-center py-4">
                   <div {...getRootPropsClick()} className="">
                     <input {...getInputPropsClick()} />
                     <button className="text-primary hover:text-gray-700 p-2">
@@ -483,13 +494,14 @@ const ChatBox = forwardRef((props, ref) => {
                   <div className="flex-grow">
                     <div {...getRootProps()} className="">
                       <input {...getInputProps()} />
-                      <input
-                        type="text"
+                      <textarea
+                        ref={textareaRef}
+                        rows={1}
                         value={message}
                         onChange={(e) => setMessage(e.currentTarget.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Type a message..."
-                        className="w-full border rounded-xl focus:outline-none focus:border-border pl-4 h-10 text-card-foreground bg-background "
+                        placeholder="Got a question? Let’s build the answer together!"
+                        className="no-scrollbar min-h-10 w-full border resize-none rounded-3xl focus:outline-none focus:border-border pl-4 pt-2 text-card-foreground bg-background "
                       />
                     </div>
                   </div>
