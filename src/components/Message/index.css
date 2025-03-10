@@ -13,3 +13,7 @@
 .chatTable table tr {
   background: transparent !important;
 }
+ul li {
+  list-style: disc;
+  margin-left: 32px;
+}

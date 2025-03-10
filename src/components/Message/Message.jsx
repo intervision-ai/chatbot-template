@@ -3,7 +3,9 @@ import { CheckCheck, Copy, FileText, RefreshCcw, User } from "lucide-react";
 import { useCallback, useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { BsArrowRight } from "react-icons/bs";
+import ReactMarkdown from "react-markdown";
 import TimeAgo from "react-timeago";
+import remarkGfm from "remark-gfm";
 import config from "../../config.json";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import MessageFeedback from "./MessageFeedback";
@@ -173,13 +175,56 @@ const Message = (props) => {
                     <div className="relative ml-1 text-base bg-card text-card-foreground py-4 px-4 shadow rounded-3xl overflow-x-auto overflow-y-hidden">
                       {chatMsg.botMessage && (
                         <>
-                          <div
+                          {/* <div
                             className="text-left chatTable"
                             dangerouslySetInnerHTML={createMarkup(
                               chatMsg.botMessage
                             )}
-                          />
-
+                          /> */}
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            className="text-foreground list-disc prose"
+                            components={{
+                              p: ({ node, ...props }) => (
+                                <p className="mt-1.5" {...props} />
+                              ),
+                              a: ({ node, ...props }) => (
+                                <a
+                                  {...props}
+                                  className="text-blue-600 underline hover:text-blue-800 text-sm"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                />
+                              ),
+                              table: ({ children }) => (
+                                <table className="w-full border-collapse border border-border rounded-xl">
+                                  {children}
+                                </table>
+                              ),
+                              thead: ({ children }) => (
+                                <thead className="bg-gray-200">
+                                  {children}
+                                </thead>
+                              ),
+                              tr: ({ children }) => (
+                                <tr className="border border-border rounded-t-xl">
+                                  {children}
+                                </tr>
+                              ),
+                              th: ({ children }) => (
+                                <th className="border border-border px-4 py-2 text-left bg-background font-semibold">
+                                  {children}
+                                </th>
+                              ),
+                              td: ({ children }) => (
+                                <td className="border border-border px-4 py-2">
+                                  {children}
+                                </td>
+                              ),
+                            }}
+                          >
+                            {chatMsg.botMessage}
+                          </ReactMarkdown>
                           <div className="flex justify-between items-center mt-4">
                             {/* <MessageFeedback
                               message={chatMsg}
