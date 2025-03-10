@@ -46,11 +46,11 @@
         "scope": "openid profile email"
       },
       "cognito": {
-        "authority": "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_UlGn7eD6e",
-        "clientId": "7l2c8khvcgkidoqt8662g4ks7a",
+        "authority": "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_nWzfgyArH",
+        "clientId": "3gell5tugv1b8b5ekk5t7leoce",
         "redirectUri": "/login/callback",
         "responseType": "code",
-        "scope": "openid profile email"
+        "scope": "openid openid email"
       },
       "entra": {
         "authority": "https://login.microsoftonline.com/795f5108-28ff-41fb-8d4a-9082576511a2/",
