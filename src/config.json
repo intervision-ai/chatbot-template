@@ -3,10 +3,11 @@
   "environment": "dev",
   "companyName": "InterVision",
   "apiUrls": {
-    "chatQuery": "https://oxbiuvy7ik3fphptge6odqbnne0issgg.lambda-url.us-west-2.on.aws/",
-    "getChatsBySession": "https://u3ukd5xp7ep7amjbal6uo3kdc40ehavl.lambda-url.us-west-2.on.aws/",
-    "getChatHistory": "https://yijlrumcg5kbulj6h7vknienkm0gvqrx.lambda-url.us-west-2.on.aws/8/5*/",
-    "saveFeedback": "https://3vzdnzzazvoqbp4gxv45akps5e0zqpco.lambda-url.us-west-2.on.aws/"
+    "chatQuery": "https://kxjpokboctmt3ac4y4oyg25bvy0ktiya.lambda-url.us-west-2.on.aws/",
+    "getChatsBySession": "https://4qutqi2ujhljswnet4rnjuxcum0zbsef.lambda-url.us-west-2.on.aws/",
+    "getChatHistory": "https://b5c23truqrtat2qlzxe3d5svmm0jwdpv.lambda-url.us-west-2.on.aws",
+    "deleteHistory": "https://titykwbqeouqnnezfbxombrv2i0tbfiz.lambda-url.us-west-2.on.aws",
+    "saveFeedback": "https://rlw5p67wcpmast3kmmhytlxfi40cpewm.lambda-url.us-west-2.on.aws/"
   },
 
   "branding": {

@@ -13,8 +13,10 @@ import { BsClockHistory } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import config from "../../config.json";
 
+import toast from "react-hot-toast";
 import { MdMenuOpen } from "react-icons/md";
 import { useAuth } from "../../contexts/authContext";
+import { useChat } from "../../contexts/chatContext";
 import { useTheme } from "../../store/theme";
 import {
   DropdownMenu,
@@ -22,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdownMenu";
+
 const RecentChats = ({ userEmail, onChatSelect }) => {
   const [recentChats, setRecentChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +37,7 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
   });
 
   const scrollContainerRef = useRef(null);
-
+  const { sessionId, updateSessionId } = useChat();
   useEffect(() => {
     const fetchChats = async () => {
       // if (!userEmail) {
@@ -86,7 +89,26 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
       }
     };
   }, [recentChats]);
-
+  const deleteChatHistoty = (selectedChatsessionId) => {
+    const payload = {
+      sessionid: selectedChatsessionId,
+      email: userEmail?.toLowerCase(),
+    };
+    axios
+      .post(config.apiUrls.deleteHistory, payload)
+      .then((response) => {
+        toast.success("Deleted!");
+        setRecentChats((prevChats) =>
+          prevChats.filter((chat) => chat.sessionId !== selectedChatsessionId)
+        );
+        if (sessionId === selectedChatsessionId) {
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.message || "Something went wrong");
+      });
+  };
   const ScrollIndicator = ({ direction }) => (
     <div
       className={`absolute left-0 right-0 h-8 pointer-events-none
@@ -156,6 +178,7 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
                   onClick={() => {
                     onChatSelect(chat.sessionId);
                     setActiveSession(chat.sessionId);
+                    updateSessionId(chat.sessionId);
                   }}
                   onMouseEnter={() => {
                     setHoveredIndex(index);
@@ -193,7 +216,9 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
                         <EllipsisVertical size={18} />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => deleteChatHistoty(chat.sessionId)}
+                        >
                           <Trash2 className="text-destructive" />
                           <span className="text-destructive">Delete</span>
                         </DropdownMenuItem>

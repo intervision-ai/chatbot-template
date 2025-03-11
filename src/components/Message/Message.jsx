@@ -181,50 +181,51 @@ const Message = (props) => {
                               chatMsg.botMessage
                             )}
                           /> */}
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            className="text-foreground list-disc prose"
-                            components={{
-                              p: ({ node, ...props }) => (
-                                <p className="mt-1.5" {...props} />
-                              ),
-                              a: ({ node, ...props }) => (
-                                <a
-                                  {...props}
-                                  className="text-blue-600 underline hover:text-blue-800 text-sm"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                />
-                              ),
-                              table: ({ children }) => (
-                                <table className="w-full border-collapse border border-border rounded-xl">
-                                  {children}
-                                </table>
-                              ),
-                              thead: ({ children }) => (
-                                <thead className="bg-gray-200">
-                                  {children}
-                                </thead>
-                              ),
-                              tr: ({ children }) => (
-                                <tr className="border border-border rounded-t-xl">
-                                  {children}
-                                </tr>
-                              ),
-                              th: ({ children }) => (
-                                <th className="border border-border px-4 py-2 text-left bg-background font-semibold">
-                                  {children}
-                                </th>
-                              ),
-                              td: ({ children }) => (
-                                <td className="border border-border px-4 py-2">
-                                  {children}
-                                </td>
-                              ),
-                            }}
-                          >
-                            {chatMsg.botMessage}
-                          </ReactMarkdown>
+                          <div className="text-foreground list-disc prose">
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                p: ({ node, ...props }) => (
+                                  <p className="mt-1.5" {...props} />
+                                ),
+                                a: ({ node, ...props }) => (
+                                  <a
+                                    {...props}
+                                    className="text-blue-600 underline hover:text-blue-800 text-sm"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  />
+                                ),
+                                table: ({ children }) => (
+                                  <table className="w-full border-collapse border border-border rounded-xl">
+                                    {children}
+                                  </table>
+                                ),
+                                thead: ({ children }) => (
+                                  <thead className="bg-gray-200">
+                                    {children}
+                                  </thead>
+                                ),
+                                tr: ({ children }) => (
+                                  <tr className="border border-border rounded-t-xl">
+                                    {children}
+                                  </tr>
+                                ),
+                                th: ({ children }) => (
+                                  <th className="border border-border px-4 py-2 text-left bg-background font-semibold">
+                                    {children}
+                                  </th>
+                                ),
+                                td: ({ children }) => (
+                                  <td className="border border-border px-4 py-2">
+                                    {children}
+                                  </td>
+                                ),
+                              }}
+                            >
+                              {chatMsg.botMessage}
+                            </ReactMarkdown>
+                          </div>
                           <div className="flex justify-between items-center mt-4">
                             {/* <MessageFeedback
                               message={chatMsg}
