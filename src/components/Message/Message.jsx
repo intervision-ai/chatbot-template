@@ -138,7 +138,7 @@ const Message = (props) => {
                           <TimeAgo
                             date={messageTimestamp}
                             formatter={customFormatter}
-                            live={true}
+                            live={false}
                           />
                         </div>
                       </div>
@@ -151,7 +151,7 @@ const Message = (props) => {
                 <div className="flex flex-row mb-5">
                   <div className="flex-col justify-center h-10 w-10 rounded-full flex-shrink-0">
                     <img
-                      src={"/images/bot.png"}
+                      src={"/images/bot.jpg"}
                       alt="Assistant"
                       className="w-10 rounded-full "
                     />
@@ -322,7 +322,7 @@ const Message = (props) => {
                               <TimeAgo
                                 date={messageTimestamp}
                                 formatter={customFormatter}
-                                live={true}
+                                live={false}
                               />
                             </div>
                           </div>
