@@ -1,6 +1,7 @@
 import { DownloadIcon, PlusCircle } from "lucide-react";
 import { ThemeToggle } from "../themeToggler/themeToggler";
 import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const Header = ({ onDownload, hasActiveSession }) => {
   const handleDownloadClick = async () => {
@@ -65,14 +66,23 @@ const Header = ({ onDownload, hasActiveSession }) => {
 						className="object-contain shrink-0 w-10 rounded aspect-square"
 					/> */}
           <ThemeToggle />
-          <div
-            className={`hover:cursor-pointer flex items-center ${
-              !hasActiveSession ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={handleDownloadClick}
-          >
-            <DownloadIcon className="text-card-foreground" size={20} />
-          </div>
+          <Tooltip>
+            <TooltipTrigger>
+              <div
+                className={` flex items-center ${
+                  !hasActiveSession
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                onClick={handleDownloadClick}
+              >
+                {isChatActive && (
+                  <DownloadIcon className="text-card-foreground" size={20} />
+                )}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>Download conversation</TooltipContent>
+          </Tooltip>
         </nav>
       </section>
     </header>
