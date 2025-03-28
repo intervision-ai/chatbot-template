@@ -76,9 +76,7 @@ const Header = ({ onDownload, hasActiveSession }) => {
                 }`}
                 onClick={handleDownloadClick}
               >
-                {isChatActive && (
-                  <DownloadIcon className="text-card-foreground" size={20} />
-                )}
+                <DownloadIcon className="text-card-foreground" size={20} />
               </div>
             </TooltipTrigger>
             <TooltipContent>Download conversation</TooltipContent>
