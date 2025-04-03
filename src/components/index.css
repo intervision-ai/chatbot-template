@@ -1,0 +1,47 @@
+/* Assistant.css */
+.voice-assistant {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.status {
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.status.awake {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.sleeping {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.command {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.response {
+  font-weight: bold;
+  color: #0066cc;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.instructions {
+  margin-top: 30px;
+  font-style: italic;
+  color: #6c757d;
+}

@@ -39,30 +39,44 @@ const RecentChats = ({ userEmail, onChatSelect }) => {
   const scrollContainerRef = useRef(null);
   const { sessionId, updateSessionId } = useChat();
   useEffect(() => {
-    const fetchChats = async () => {
-      // if (!userEmail) {
-      //   setIsLoading(false);
-      //   return;
-      // }
-      if (!userEmail) {
-        return;
-      }
+    setActiveSession(sessionId);
+    if (sessionId && userEmail) {
       try {
-        setIsLoading(true);
-        const response = await axios.post(config.apiUrls.getChatHistory, {
-          email: userEmail,
-        });
-        setRecentChats(response.data);
+        axios
+          .post(config.apiUrls.getChatHistory, {
+            email: userEmail,
+          })
+          .then((res) => {
+            setRecentChats(res.data);
+          });
       } catch (err) {
-        setError("Failed to load recent chats");
+        setError("Failed to re-load recent chats");
         console.error(err);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    }
+  }, [sessionId, userEmail]);
 
+  useEffect(() => {
     fetchChats();
   }, [userEmail]);
+
+  const fetchChats = async () => {
+    if (!userEmail) {
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const response = await axios.post(config.apiUrls.getChatHistory, {
+        email: userEmail,
+      });
+      setRecentChats(response.data);
+    } catch (err) {
+      setError("Failed to load recent chats");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const checkScroll = () => {

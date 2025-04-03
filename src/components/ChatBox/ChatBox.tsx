@@ -1,18 +1,24 @@
+import { useChat } from "@/contexts/chatContext";
+import useSpeechToText from "@/hooks/useSpeechToText";
 import axios from "axios";
-import { FileText, PaperclipIcon } from "lucide-react";
+import {
+  AudioLines,
+  FileText,
+  Mic,
+  PaperclipIcon,
+  Send,
+  SquareIcon,
+} from "lucide-react";
 import {
   forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { useDropzone } from "react-dropzone";
-// import { useAuth } from "react-oidc-context";
-// import logo from "../../assets/images/small-logo.png";
-// import { useOktaAuth } from "@okta/okta-react";
-import { useLayoutEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import config from "../../config.json";
 import { useAuth } from "../../contexts/authContext";
@@ -21,8 +27,47 @@ import Accordion from "../accordion/accordion";
 import Header from "../Header/Header";
 import Message from "../Message/Message";
 import { RightDrawer } from "../rightpanel/rightDrawer";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const fileCategories = {
+// Define types
+type FileCategory = {
+  [key: string]: string;
+};
+
+type Base64File = {
+  fileName: string;
+  fileContent: string;
+  contentType: string;
+  fileSize: number;
+  fileType: string;
+};
+
+type ChatMessage = {
+  message_uuid?: string;
+  feedback?: string;
+  message: string;
+  type: "user" | "bot";
+  botMessage?: string;
+  sources?: any[];
+  timestamp?: string;
+  doc_uploaded?: string;
+  file_name?: string;
+  file_type?: string;
+};
+
+type RightPanelContent = any; // Replace with proper type if available
+
+type ChatBoxProps = {
+  // Add any props if needed
+};
+
+type ChatBoxHandle = {
+  handleChatSelect: (sessionId: string) => void;
+  downloadJsonFile: () => void;
+  latestSessionId: string;
+};
+
+const fileCategories: FileCategory = {
   "application/pdf": "PDF",
   "application/msword": "DOC",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -31,53 +76,51 @@ const fileCategories = {
   // Add more mappings as needed
 };
 
-const ChatBox = forwardRef((props, ref) => {
-  // const config = useConfig();
+const ChatBox = forwardRef<ChatBoxHandle, ChatBoxProps>((props, ref) => {
   const { theme } = useTheme();
   console.log(theme);
 
   const defaultSuggestion = config.AppLevelConstants.defaultQuestions;
-  const [latestSessionId, setLatestSessionId] = useState("");
-  const [sessionStatus, setSessionStatus] = useState("new");
-  const [message, setMessage] = useState("");
-  const [chatSession, setChatSession] = useState([]);
-  const [submitForm, setSubmitForm] = useState(false);
-  const [rightPanelContent, setRightPanelContent] = useState("");
-  const [showRightPanelContent, setShowRightPanelContent] = useState(false);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  // const [showAddFileModal, setShowAddFileModal] = useState(false);
-  const [base64Files, setBase64Files] = useState([]);
-  const [panelSize, setPanelSize] = useState([100, 0]);
-  const chatContainerRef = useRef(null);
-  const textareaRef = useRef();
-  // const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [latestSessionId, setLatestSessionId] = useState<string>("");
+  const [sessionStatus, setSessionStatus] = useState<string>("new");
+  const [message, setMessage] = useState<string>("");
+  const [chatSession, setChatSession] = useState<ChatMessage[]>([]);
+  const [submitForm, setSubmitForm] = useState<boolean>(false);
+  const [rightPanelContent, setRightPanelContent] =
+    useState<RightPanelContent>("");
+  const [showRightPanelContent, setShowRightPanelContent] =
+    useState<boolean>(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
+  const [base64Files, setBase64Files] = useState<Base64File[]>([]);
+  const [panelSize, setPanelSize] = useState<[number, number]>([100, 0]);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const [isListening, setListening] = useState<boolean>(false);
   const { user, isAuthenticated } = useAuth();
+  const { updateSessionId } = useChat();
+
+  // const {
+  //   transcript,
+  //   listening,
+  //   resetTranscript,
+  //   browserSupportsSpeechRecognition,
+  // } = useSpeechRecognition();
+
+  const { transcript, listening, error, startListening, stopListening } =
+    useSpeechToText();
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   useEffect(() => {
-    console.log(chatSession);
-  }, [chatSession]);
+    setMessage(transcript || "");
+  }, [transcript]);
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [message]);
-
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     try {
-  //       const authenticated = await oktaAuth.isAuthenticated();
-  //       setIsAuthenticated(authenticated);
-  //       setUser(authenticated ? await oktaAuth.getUser() : null);
-  //     } catch (error) {
-  //       console.error("Auth check failed:", error);
-  //       setIsAuthenticated(false);
-  //     }
-  //   };
-
-  //   checkAuth();
-  // }, [oktaAuth]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -102,7 +145,7 @@ const ChatBox = forwardRef((props, ref) => {
     };
     updateScreenSize();
   }, []);
-  // Utility function to download JSON data as a file
+
   const downloadJsonFile = async () => {
     const filename = "chat.json";
     setIsLoadingHistory(true);
@@ -112,7 +155,7 @@ const ChatBox = forwardRef((props, ref) => {
         email: user?.email?.toLowerCase(),
       });
 
-      const formattedChats = response.data.map((msg) => ({
+      const formattedChats = response.data.map((msg: any) => ({
         feedback: msg.feedback,
         message: msg.Input_query,
         type: "user",
@@ -138,7 +181,7 @@ const ChatBox = forwardRef((props, ref) => {
     }
   };
 
-  const handleChatSelect = async (sessionId) => {
+  const handleChatSelect = async (sessionId: string) => {
     setIsLoadingHistory(true);
     try {
       const response = await axios.post(config.apiUrls.getChatsBySession, {
@@ -146,7 +189,7 @@ const ChatBox = forwardRef((props, ref) => {
         email: user?.email?.toLowerCase(),
       });
 
-      const formattedChats = response.data.map((msg) => ({
+      const formattedChats = response.data.map((msg: any) => ({
         message_uuid: msg.message_uuid,
         feedback: msg.feedback,
         message: msg.Input_query,
@@ -175,7 +218,7 @@ const ChatBox = forwardRef((props, ref) => {
     latestSessionId,
   }));
 
-  const handleCopyClick = useCallback(async (msg) => {
+  const handleCopyClick = useCallback(async (msg: string) => {
     let copiedMsg = msg.trim();
     try {
       await window.navigator.clipboard.writeText(copiedMsg);
@@ -184,12 +227,12 @@ const ChatBox = forwardRef((props, ref) => {
     }
   }, []);
 
-  const submitQuery = async (message) => {
+  const submitQuery = async (message: string) => {
     if (!message && (!base64Files || base64Files.length === 0)) {
       return;
     }
     setSubmitForm(true);
-    const file = base64Files && base64Files.length ? base64Files[0] : null;
+    const file = base64Files && base64Files.length ? base64Files[0] : undefined;
     const args = {
       text: message,
       doc_uploaded: file ? "Y" : "N",
@@ -208,9 +251,9 @@ const ChatBox = forwardRef((props, ref) => {
     }
   };
 
-  const submitBotQuery = async (userMsg, file) => {
+  const submitBotQuery = async (userMsg: string, file?: Base64File) => {
     setSubmitForm(true);
-    let data = {
+    let data: any = {
       input: userMsg,
       email: user?.email?.toLowerCase(),
       doc_uploaded: "N",
@@ -231,7 +274,6 @@ const ChatBox = forwardRef((props, ref) => {
     await axios
       .post(config.apiUrls.chatQuery, data)
       .then((response) => {
-        // handleSessionSync(response.data, data);
         handleChatSession(response.data, "bot");
         setLatestSessionId(response.data.sessionId);
         setSessionStatus("continue");
@@ -243,11 +285,11 @@ const ChatBox = forwardRef((props, ref) => {
       });
   };
 
-  const handleChatSession = (message, type) => {
+  const handleChatSession = (message: any, type: "user" | "bot") => {
     if (type === "user") {
       const chatObj = {
         message: message.text,
-        type: "user",
+        type: "user" as any,
         botMessage: "",
         doc_uploaded: message?.doc_uploaded,
         file_name: message?.file_name,
@@ -272,56 +314,52 @@ const ChatBox = forwardRef((props, ref) => {
       );
     }
   };
-  function formatDateWithMicroseconds(date) {
-    const isoString = date.toISOString(); // e.g., "2025-01-10T06:29:44.199Z"
-    const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
-    const microseconds = milliseconds + "000"; // Add extra zeros for microseconds
 
+  function formatDateWithMicroseconds(date: Date) {
+    const isoString = date.toISOString();
+    const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
+    const microseconds = milliseconds + "000";
     return isoString.replace(/\.\d{3}Z$/, `.${microseconds}`);
   }
-  function handleKeyDown(event) {
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       if (!submitForm) {
         submitQuery(message?.trim());
-        // setSubmitForm(true);
       }
     }
   }
 
-  const onSourceClick = (chatMsg) => {
+  const onSourceClick = (chatMsg: any) => {
     setRightPanelContent(chatMsg);
     setShowRightPanelContent(true);
   };
 
-  const onSuggestionCardClick = (text) => {
+  const onSuggestionCardClick = (text: string) => {
     submitQuery(text);
     setSubmitForm(true);
   };
-  // const toggleAddFileModal = () => {
-  //   setShowAddFileModal(!showAddFileModal);
-  // };
 
   // Dropzone file handler
-  const onDrop = (acceptedFiles) => {
-    // console.log(fileRejections);
+  const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length) {
       convertFilesToBase64(acceptedFiles);
     }
   };
 
-  const convertFilesToBase64 = (files) => {
+  const convertFilesToBase64 = (files: File[]) => {
     const promises = files.map((file) => {
-      return new Promise((resolve, reject) => {
+      return new Promise<Base64File>((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () =>
           resolve({
             fileName: file.name,
-            fileContent: replaceBase64(reader.result),
+            fileContent: replaceBase64(reader.result as string),
             contentType: file.type,
             fileSize: file.size,
-            fileType: fileCategories[file.type],
+            fileType: fileCategories[file.type] || "UNKNOWN",
           });
         reader.onerror = reject;
       });
@@ -332,10 +370,11 @@ const ChatBox = forwardRef((props, ref) => {
     });
   };
 
-  const replaceBase64 = (base64) => {
+  const replaceBase64 = (base64: string) => {
     const newstr = base64.replace(/^data:[^;]+;base64,/, "");
     return newstr;
   };
+
   // Dropzone settings
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
@@ -348,6 +387,7 @@ const ChatBox = forwardRef((props, ref) => {
     multiple: false,
     maxFiles: 1,
   });
+
   const { getRootProps: getRootPropsClick, getInputProps: getInputPropsClick } =
     useDropzone({
       onDrop,
@@ -358,46 +398,49 @@ const ChatBox = forwardRef((props, ref) => {
       },
       multiple: false,
     });
+
   useEffect(() => {
     if (fileRejections.length > 1) {
       toast.error("Multiple file allowed");
     }
   }, [fileRejections]);
+
   const isChatSessionHasDoc = () => {
     const hasDoc = chatSession.some((chat) => chat.doc_uploaded === "Y");
     return !!hasDoc;
   };
+
   const toggleRightSidepanel = () => {
     setShowRightPanelContent(!showRightPanelContent);
+  };
+  const onDictate = () => {
+    if (listening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+    // setListening(!isListening);
+  };
+  // const startListening = () =>
+  //   SpeechRecognition.startListening({ continuous: true });
+  const newChat = () => {
+    setChatSession([]);
+    setLatestSessionId("");
+    setSessionStatus("new");
+    setRightPanelContent("");
+    updateSessionId("");
+    setMessage("");
   };
   return (
     <div className="relative w-full">
       <Toaster />
-
-      {/* <div
-        className={`flex gap-1 sm:items-center items-end rounded-xl absolute md:top-4 top-5 left-1/2 -translate-x-1/2 transition-opacity duration-500 ${
-          chatSession.length > 0 || isLoadingHistory
-            ? "opacity-100"
-            : "opacity-0"
-        }`}
-      >
-        <img
-          src={"/images/sophia-small.png"}
-          alt="Sophia Logo"
-          className="md:w-8 w-[20px]"
-        />
-        <div className="text-[#04ADEF]  md:text-xl text-sm font-bold">
-          Sophia
-        </div>
-      </div> */}
       <div className="flex w-full flex-col h-screen">
         <Header
+          onNewChat={newChat}
           onDownload={downloadJsonFile}
           hasActiveSession={!!latestSessionId}
         />
         <div className="flex-1 w-full overflow-hidden bg-background">
-          {/* <PanelGroup direction="horizontal">
-            <Panel defaultSize={panelSize[0]} order={1}> */}
           <div className="h-full w-full flex flex-col">
             <div
               ref={chatContainerRef}
@@ -449,7 +492,7 @@ const ChatBox = forwardRef((props, ref) => {
                         </div>
                       </div>
                     </div>
-                    {defaultSuggestion.map((item) => (
+                    {defaultSuggestion.map((item: any) => (
                       <div
                         key={item.id}
                         className="rounded-xl bg-card text-secondary-foreground shadow-md w-full p-5 cursor-pointer"
@@ -462,8 +505,8 @@ const ChatBox = forwardRef((props, ref) => {
                 </div>
               )}
             </div>
-            <div className="mt-4 p-2">
-              <div className=" rounded-xl bg-card px-4">
+            <div className="m-4 p-2 bp-6 flex justify-center">
+              <div className=" rounded-[30px] bg-card px-4 shadow-lg  w-full ">
                 <div className="flex gap-2">
                   {base64Files.map((file, index) => (
                     <div
@@ -477,21 +520,15 @@ const ChatBox = forwardRef((props, ref) => {
                         <div className="font-semibold text-secondary-foreground">
                           {file.fileName}
                         </div>
-                        <div className="font-medium text-secondary">
+                        <div className="font-medium  text-secondary">
                           {file.fileType}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center py-4">
-                  <div {...getRootPropsClick()} className="">
-                    <input {...getInputPropsClick()} />
-                    <button className="text-primary hover:text-gray-700 p-2">
-                      <PaperclipIcon size={20} />
-                    </button>
-                  </div>
-                  <div className="flex-grow">
+                <div className=" py-4">
+                  <div className="">
                     <div {...getRootProps()} className="">
                       <input {...getInputProps()} />
                       <textarea
@@ -500,43 +537,85 @@ const ChatBox = forwardRef((props, ref) => {
                         value={message}
                         onChange={(e) => setMessage(e.currentTarget.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Got a question? Let’s build the answer together!"
-                        className="no-scrollbar min-h-10 w-full border resize-none rounded-3xl focus:outline-none focus:border-border pl-4 pt-2 text-card-foreground bg-background "
+                        autoFocus
+                        placeholder="Got a question? Let's build the answer together!"
+                        className="no-scrollbar min-h-10 w-full border-none resize-none  focus:outline-none focus:border-none text-card-foreground bg-transparent "
                       />
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      submitQuery(message);
-                    }}
-                    disabled={submitForm}
-                    className={`ml-4 flex items-center justify-center bg-primary hover:scale-105 rounded-xl text-card px-4 py-2 ${
-                      submitForm && "bg-gray-300 cursor-not-allowed opacity-50"
-                    }`}
-                  >
-                    <span>Send</span>
-                    <span className="ml-2">
-                      <svg
-                        className="w-4 h-4 transform rotate-45 -mt-px"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        ></path>
-                      </svg>
-                    </span>
-                  </button>
+                  <div className="flex justify-between">
+                    <div {...getRootPropsClick()} className="">
+                      <input {...getInputPropsClick()} />
+                      <button className="text-primary hover:text-gray-700 p-2">
+                        <PaperclipIcon size={20} />
+                      </button>
+                    </div>
+                    <div className="flex justify-end items-center gap-2">
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <button
+                            onClick={() => {
+                              onDictate();
+                            }}
+                            disabled={submitForm}
+                            className={` flex items-center justify-center bg-primary hover:scale-105 rounded-full h-8 w-8 text-card p-2  ${
+                              submitForm &&
+                              "bg-gray-300 cursor-not-allowed opacity-50"
+                            }`}
+                          >
+                            {!listening ? (
+                              <Mic size={20} />
+                            ) : (
+                              <AudioLines size={20} className="animate-pulse" />
+                            )}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Dictate</TooltipContent>
+                      </Tooltip>
+                      {listening ? (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <button
+                              onClick={() => {
+                                onDictate();
+                              }}
+                              disabled={submitForm}
+                              className={` flex items-center justify-center bg-primary hover:scale-105 rounded-full h-8 w-8 text-card p-2  ${
+                                submitForm &&
+                                "bg-gray-300 cursor-not-allowed opacity-50"
+                              }`}
+                            >
+                              <SquareIcon size={20} fill="#fff" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Stop</TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <button
+                              onClick={() => {
+                                submitQuery(message);
+                              }}
+                              disabled={submitForm}
+                              className={` flex items-center justify-center bg-primary hover:scale-105 rounded-full h-8 w-8 text-card p-2  ${
+                                submitForm &&
+                                "bg-gray-300 cursor-not-allowed opacity-50"
+                              }`}
+                            >
+                              <Send size={20} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Send</TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
+                    {/* <SophiaAssistant /> */}``
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          {/* </Panel> */}
 
           {rightPanelContent && (
             <RightDrawer
@@ -544,26 +623,19 @@ const ChatBox = forwardRef((props, ref) => {
               onClose={toggleRightSidepanel}
               title="Proof of origin"
             >
-              {/* <PanelResizeHandle hitAreaMargins={{ coarse: 15, fine: 15 }} />
-                <Panel
-                  id="sidebar"
-                  defaultSize={panelSize[1]}
-                  order={2}
-                  className="transition-all duration-300"
-                > */}
               <div className="h-full bg-card p-4 pr-0">
                 <div className="">
                   <Accordion accordionData={rightPanelContent} />
                 </div>
               </div>
-              {/* </Panel> */}
             </RightDrawer>
           )}
-          {/* </PanelGroup> */}
         </div>
       </div>
     </div>
   );
 });
+
+ChatBox.displayName = "ChatBox";
 
 export default ChatBox;

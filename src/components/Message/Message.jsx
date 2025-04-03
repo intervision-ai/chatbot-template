@@ -1,5 +1,13 @@
+import useTextToSpeech from "@/hooks/useTextToSpeech";
 import axios from "axios";
-import { CheckCheck, Copy, FileText, RefreshCcw, User } from "lucide-react";
+import {
+  CheckCheck,
+  Copy,
+  FileText,
+  RefreshCcw,
+  User,
+  Volume2,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { BsArrowRight } from "react-icons/bs";
@@ -23,6 +31,15 @@ const Message = (props) => {
 
   const [textCopied, setTextCopied] = useState(false);
   const [rightPanelContentId, setRightPanelContentId] = useState(null);
+
+  const {
+    speak,
+    stopSpeaking,
+    isSpeaking,
+    voices,
+    selectedVoice,
+    setSelectedVoice,
+  } = useTextToSpeech();
 
   const handleTextCopied = useCallback(() => {
     setTextCopied(true);
@@ -79,6 +96,24 @@ const Message = (props) => {
     return { __html: styledHTML };
   };
 
+  const readAloud = (text) => {
+    if (isSpeaking) {
+      stopSpeaking();
+      return;
+    }
+    const newText = markdownToPlainText(text);
+    speak(newText);
+  };
+  const markdownToPlainText = (markdown) => {
+    return markdown
+      .replace(/[_*~`]/g, "") // Remove emphasis and code characters
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Remove links, keep text
+      .replace(/#{1,6}\s*/g, "") // Remove headings
+      .replace(/!\[.*?\]\(.*?\)/g, "") // Remove images
+      .replace(/>\s*/g, "") // Remove blockquotes
+      .replace(/[-*+]\s/g, "") // Remove list markers
+      .replace(/\n{2,}/g, "\n"); // Replace multiple newlines with a single newline
+  };
   return (
     <>
       {chatSession.message !== "" &&
@@ -106,10 +141,10 @@ const Message = (props) => {
                       </div>
                     </div>
                     {
-                      <div className="relative mr-3 text-base bg-card-foreground py-3 px-4 shadow rounded-3xl rounded-tr-sm">
+                      <div className="relative mr-3 text-sm bg-card-foreground py-3 px-4 shadow rounded-3xl rounded-tr-sm">
                         {chatMsg.file_name && (
                           <div className="flex items-center justify-end mb-1 mr-14">
-                            <div className="bg-background text-base flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
+                            <div className="bg-background text-sm flex gap-1 items-center  px-2 py-1 border border-secondary rounded-xl max-w-96">
                               <div className="bg-primary p-2 rounded-lg">
                                 <FileText
                                   size={20}
@@ -147,7 +182,7 @@ const Message = (props) => {
                 </div>
               </div>
 
-              <div className="col-start-1 col-end-8 p-3 rounded-lg md:w-10/12 w-full">
+              <div className="col-start-1 col-end-8 p-3 rounded-lg  md:w-10/12 w-full">
                 <div className="flex flex-row mb-5">
                   <div className="flex-col justify-center h-10 w-10 rounded-full flex-shrink-0">
                     <img
@@ -172,7 +207,7 @@ const Message = (props) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="relative ml-1 text-base bg-card text-card-foreground py-4 px-4 shadow rounded-3xl overflow-x-auto overflow-y-hidden">
+                    <div className="relative ml-1 text-sm bg-card/70 text-card-foreground py-4 px-4 shadow rounded-3xl rounded-tl-sm overflow-x-auto overflow-y-hidden">
                       {chatMsg.botMessage && (
                         <>
                           {/* <div
@@ -272,7 +307,9 @@ const Message = (props) => {
                                   <button
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      handleCopyClick(chatMsg.botMessage);
+                                      handleCopyClick(
+                                        markdownToPlainText(chatMsg.botMessage)
+                                      );
                                       handleTextCopied();
                                     }}
                                     className="text-slate-500 rounded-md text-xs py-0.5 px-2 inline-flex items-center"
@@ -291,6 +328,20 @@ const Message = (props) => {
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent>Copy</TooltipContent>
+                              </Tooltip>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Volume2
+                                    onClick={() =>
+                                      readAloud(chatMsg.botMessage)
+                                    }
+                                    size={18}
+                                    className={`text-slate-500 hover:text-secondary-foreground ${
+                                      isSpeaking ? "animate-pulse" : ""
+                                    }`}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>Read aloud</TooltipContent>
                               </Tooltip>
 
                               {lastIndex === idx && (
