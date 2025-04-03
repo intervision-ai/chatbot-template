@@ -25,6 +25,7 @@ import { useAuth } from "../../contexts/authContext";
 import { useTheme } from "../../store/theme";
 import Accordion from "../accordion/accordion";
 import Header from "../Header/Header";
+import { HelpDeskTrigger } from "../helpDesk/HelpDeskTrigger";
 import Message from "../Message/Message";
 import { RightDrawer } from "../rightpanel/rightDrawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -505,7 +506,7 @@ const ChatBox = forwardRef<ChatBoxHandle, ChatBoxProps>((props, ref) => {
                 </div>
               )}
             </div>
-            <div className="m-4 p-2 bp-6 flex justify-center">
+            <div className="p-6 flex justify-center">
               <div className=" rounded-[30px] bg-card px-4 shadow-lg  w-full ">
                 <div className="flex gap-2">
                   {base64Files.map((file, index) => (
@@ -527,7 +528,8 @@ const ChatBox = forwardRef<ChatBoxHandle, ChatBoxProps>((props, ref) => {
                     </div>
                   ))}
                 </div>
-                <div className=" py-4">
+                <div className=" py-4 relative">
+                  <HelpDeskTrigger />
                   <div className="">
                     <div {...getRootProps()} className="">
                       <input {...getInputProps()} />
@@ -610,7 +612,7 @@ const ChatBox = forwardRef<ChatBoxHandle, ChatBoxProps>((props, ref) => {
                         </Tooltip>
                       )}
                     </div>
-                    {/* <SophiaAssistant /> */}``
+                    {/* <SophiaAssistant /> */}
                   </div>
                 </div>
               </div>
