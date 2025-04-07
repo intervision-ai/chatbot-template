@@ -336,8 +336,10 @@ const Message = (props) => {
                                       readAloud(chatMsg.botMessage)
                                     }
                                     size={18}
-                                    className={`text-slate-500 hover:text-secondary-foreground ${
-                                      isSpeaking ? "animate-pulse" : ""
+                                    className={` hover:text-secondary-foreground ${
+                                      isSpeaking
+                                        ? "animate-pulse text-primary"
+                                        : "text-slate-500"
                                     }`}
                                   />
                                 </TooltipTrigger>

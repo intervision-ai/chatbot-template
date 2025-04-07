@@ -109,9 +109,9 @@ const ChatBox = forwardRef<ChatBoxHandle, ChatBoxProps>((props, ref) => {
 
   const { transcript, listening, error, startListening, stopListening } =
     useSpeechToText();
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
+  // useEffect(() => {
+  //   console.log(error);
+  // }, [error]);
 
   useEffect(() => {
     setMessage(transcript || "");
